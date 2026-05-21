@@ -3,1721 +3,1293 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Follow-Up</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<title>Nederlands Leren — Dutch Study App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#f0efe9;--col:#e8e7e0;--surface:#fff;--border:#e0ddd4;--border2:#c8c5bb;
-  --text:#18170f;--text2:#6a6960;--text3:#a8a79f;
-  --teal:#0d7a5f;--teal-bg:#e4f4ef;
-  --radius:10px;--shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
-  --shadow-lg:0 8px 24px rgba(0,0,0,.1),0 2px 6px rgba(0,0,0,.06);
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;overflow:hidden;}
-body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* Top bar */
-.topbar{height:52px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;padding:0 18px;z-index:50;flex-shrink:0;}
-.logo{font-size:15px;font-weight:700;letter-spacing:-.3px;margin-right:6px;white-space:nowrap;cursor:pointer;color:var(--teal);}
-.logo:hover{opacity:.8;}
-.search-wrap{position:relative;flex:1;max-width:220px;}
-.search-wrap input{width:100%;padding:6px 10px 6px 30px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-family:inherit;font-size:13px;color:var(--text);outline:none;}
-.search-wrap input:focus{border-color:var(--teal);background:#fff;}
-.search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;}
-.tag-bar{display:flex;gap:5px;overflow-x:auto;padding:2px 0;flex:1;}
-.tag-bar::-webkit-scrollbar{display:none;}
-.tf{padding:4px 11px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-family:inherit;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;color:var(--text2);}
-.tf:hover{border-color:var(--border2);color:var(--text);}
-.tf.active{background:var(--text);color:#fff;border-color:var(--text);}
-.topbar-right{margin-left:auto;display:flex;gap:7px;align-items:center;flex-shrink:0;}
-.board-tabs-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 18px;display:flex;align-items:center;gap:6px;overflow-x:auto;flex-shrink:0;height:42px;}
-.board-tabs-bar::-webkit-scrollbar{display:none;}
-.btab{padding:5px 14px;border-radius:20px;border:1px solid transparent;background:transparent;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;color:var(--text2);white-space:nowrap;transition:all .15s;}
-.btab:hover{background:var(--col);color:var(--text);border-color:transparent;}
-.btab.active{background:var(--text);color:#fff;border-color:var(--text);}
-.btab.all{color:var(--text3);}
-.btab.all.active{background:var(--text2);color:#fff;border-color:var(--text2);}
-.btab-new{padding:5px 12px;border-radius:20px;border:1.5px dashed var(--border2);background:transparent;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;color:var(--text3);white-space:nowrap;}
-.btab-new:hover{background:var(--col);color:var(--text2);border-color:var(--border2);}
+  :root {
+    --bg: #F5F2ED;
+    --surface: #FDFCFA;
+    --surface2: #EDE9E2;
+    --border: rgba(60,50,30,0.12);
+    --border2: rgba(60,50,30,0.22);
+    --text: #1A1612;
+    --text2: #6B6055;
+    --text3: #A09488;
+    --accent: #D4522A;
+    --accent-light: #FAE9E3;
+    --green: #2A7A50;
+    --green-light: #E3F2EA;
+    --red: #B83232;
+    --red-light: #FAE3E3;
+    --blue: #1E5FA6;
+    --blue-light: #E3EEFA;
+    --card-h: 240px;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
 
-/* Buttons */
-button{font-family:inherit;font-size:13px;font-weight:500;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);padding:7px 13px;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;}
-button:hover{background:var(--col);border-color:var(--border2);}
-button:active{transform:scale(.98);}
-button:disabled{opacity:.45;cursor:not-allowed;transform:none;}
-button.primary{background:var(--text);color:#fff;border-color:var(--text);}
-button.primary:hover{background:#2a2a2a;border-color:#2a2a2a;}
-button.ghost{border-color:transparent;background:transparent;color:var(--text2);padding:6px 10px;}
-button.ghost:hover{background:var(--col);color:var(--text);border-color:transparent;}
-button.icon-btn{padding:5px 7px;font-size:15px;line-height:1;background:none;border-color:transparent;color:var(--text3);}
-button.icon-btn:hover{background:var(--col);color:var(--text);border-color:transparent;}
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
 
-/* Board */
-.board-wrap{display:flex;flex-direction:column;height:calc(100vh - 94px);}
-.board{display:flex;gap:12px;padding:16px 18px 20px;overflow-x:auto;flex:1;align-items:flex-start;}
-.board::-webkit-scrollbar{height:5px;}
-.board::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+  /* grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
 
-/* Columns */
-.col{flex-shrink:0;width:276px;background:var(--col);border-radius:12px;display:flex;flex-direction:column;max-height:100%;border:2px solid transparent;transition:border-color .2s,background .2s;}
-.col.drag-over{border-color:var(--teal);background:rgba(13,122,95,.06);}
-.col-header{padding:11px 13px 7px;display:flex;align-items:center;gap:7px;flex-shrink:0;}
-.col-pip{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.col-title{font-size:13px;font-weight:700;flex:1;}
-.col-badge{font-size:11px;font-weight:700;padding:1px 7px;border-radius:20px;}
-.col-scroll{padding:0 8px 6px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;min-height:60px;}
-.col-addbtn{padding:4px 8px 8px;}
-.col-addbtn button{width:100%;justify-content:center;background:transparent;border:1.5px dashed var(--border2);color:var(--text3);font-size:12px;}
-.col-addbtn button:hover{background:var(--surface);border-style:solid;color:var(--text2);}
-.col[data-col="todo"] .col-pip{background:#aaa;}
-.col[data-col="todo"] .col-badge{background:#ddddd5;color:#555;}
-.col[data-col="outreach"] .col-pip{background:#378add;}
-.col[data-col="outreach"] .col-badge{background:#dbeafe;color:#1d4ed8;}
-.col[data-col="dialogue"] .col-pip{background:#d97706;}
-.col[data-col="dialogue"] .col-badge{background:#fef3c7;color:#92400e;}
-.col[data-col="done"] .col-pip{background:#639922;}
-.col[data-col="done"] .col-badge{background:#ecf8d8;color:#3b6d11;}
+  header {
+    position: relative;
+    z-index: 1;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+  }
 
-/* Cards */
-.card{background:var(--surface);border-radius:10px;padding:11px 13px;border:1px solid var(--border);box-shadow:var(--shadow);cursor:grab;transition:box-shadow .15s,transform .15s;position:relative;user-select:none;}
-.card:hover{box-shadow:var(--shadow-lg);transform:translateY(-1px);border-color:var(--border2);}
-.card.is-dragging{opacity:.4;transform:scale(.97);cursor:grabbing;}
-.card *{pointer-events:none;}
-.card-top{display:flex;align-items:flex-start;gap:9px;margin-bottom:8px;}
-.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;font-size:12px;}
-.card-meta{flex:1;min-width:0;}
-.card-name{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:1px;}
-.card-sub{font-size:11px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.card-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px;}
-.tag{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700;}
-.card-footer{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text3);}
-.prog-bar{width:44px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;display:inline-block;vertical-align:middle;margin-left:4px;}
-.prog-fill{height:100%;background:var(--teal);border-radius:2px;}
-.assignee-dots{display:flex;gap:2px;}
-.assignee-dot{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;}
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
 
-/* Side panel */
-.backdrop{position:fixed;inset:0;background:rgba(0,0,0,.18);z-index:200;display:none;}
-.backdrop.open{display:block;}
-.panel{position:fixed;top:0;right:0;bottom:0;width:440px;background:var(--surface);z-index:201;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .24s ease;border-left:1px solid var(--border);box-shadow:var(--shadow-lg);}
-.panel.open{transform:translateX(0);}
-.panel-hdr{padding:15px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;}
-.panel-hdr-meta{flex:1;min-width:0;}
-.panel-name{font-size:16px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.panel-sub{font-size:12px;color:var(--text2);margin-top:1px;}
-.panel-tabs{display:flex;padding:0 18px;border-bottom:1px solid var(--border);flex-shrink:0;}
-.ptab{padding:9px 12px;font-size:12px;font-weight:500;color:var(--text2);border:none;border-bottom:2px solid transparent;border-radius:0;cursor:pointer;background:none;margin-bottom:-1px;white-space:nowrap;}
-.ptab:hover{color:var(--text);background:none;}
-.ptab.active{color:var(--text);border-bottom-color:var(--text);font-weight:600;}
-.panel-body{flex:1;overflow-y:auto;padding:18px;}
-.psec{margin-bottom:18px;}
-.psec+.psec{border-top:1px solid var(--border);padding-top:18px;}
-.fl{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:4px;}
-input[type=text],input[type=email],input[type=date],input[type=password],select,textarea{font-family:inherit;font-size:13px;border:1px solid var(--border);border-radius:8px;padding:7px 10px;background:var(--surface);color:var(--text);outline:none;width:100%;transition:border-color .15s;}
-input:focus,select:focus,textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,122,95,.1);}
-textarea{resize:vertical;line-height:1.6;}
-.row{display:flex;gap:8px;align-items:center;}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.chip{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;background:var(--col);color:var(--text);border:1px solid var(--border);}
-.chip-x{background:none;border:none;padding:0;cursor:pointer;color:var(--text3);font-size:13px;line-height:1;}
-.chips-row{display:flex;flex-wrap:wrap;gap:5px;min-height:24px;}
-.task-row{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);}
-.task-row:last-child{border-bottom:none;}
-.tcheck{width:15px;height:15px;margin-top:2px;cursor:pointer;accent-color:var(--teal);flex-shrink:0;}
-.divider{height:1px;background:var(--border);margin:14px 0;}
-.spinner{width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 10px;}
-@keyframes spin{to{transform:rotate(360deg);}}
+  header span {
+    font-size: 0.8rem;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.06em;
+  }
 
-/* Modals */
-.mbackdrop{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:300;display:none;align-items:center;justify-content:center;}
-.mbackdrop.open{display:flex;}
-.modal{background:var(--surface);border-radius:14px;width:500px;max-width:95vw;max-height:88vh;overflow-y:auto;box-shadow:var(--shadow-lg);}
-.modal-hdr{padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:1;}
-.modal-hdr h2{font-size:16px;font-weight:700;}
-.modal-body{padding:18px 22px;}
-.modal-foot{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;}
+  .app {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: 0;
+  }
 
-/* Status bar */
-.statusbar{height:28px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;padding:0 18px;font-size:11px;color:var(--text3);flex-shrink:0;}
-.sdot{width:6px;height:6px;border-radius:50%;background:var(--teal);animation:pulse 2s infinite;flex-shrink:0;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
-@keyframes pillpulse{0%,100%{box-shadow:0 0 0 0 rgba(217,119,6,.3);}50%{box-shadow:0 0 0 4px rgba(217,119,6,0);}}
+  /* SIDEBAR */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    overflow-y: auto;
+  }
 
-/* Toast */
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--text);color:#fff;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:500;opacity:0;transition:opacity .25s;pointer-events:none;z-index:999;}
-.toast.show{opacity:1;}
+  .sidebar-section {
+    margin-bottom: 0.25rem;
+  }
 
-/* Scenario radio */
-.scenario-opt{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;background:var(--surface);transition:all .15s;margin-bottom:6px;}
-.scenario-opt.sel{border-color:var(--teal);background:var(--teal-bg);}
+  .sidebar-label {
+    font-size: 0.67rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    padding: 0.5rem 1.25rem 0.25rem;
+  }
+
+  .mode-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 0.55rem 1.25rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.88rem;
+    color: var(--text2);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    text-align: left;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+  }
+
+  .mode-btn:hover { background: var(--surface2); color: var(--text); }
+  .mode-btn.active { color: var(--accent); background: var(--accent-light); border-left-color: var(--accent); font-weight: 500; }
+
+  .mode-icon { font-size: 1rem; width: 18px; text-align: center; }
+
+  .cat-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.45rem 1.25rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.82rem;
+    color: var(--text2);
+    font-family: 'DM Sans', sans-serif;
+    text-align: left;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+  }
+
+  .cat-btn:hover { background: var(--surface2); color: var(--text); }
+  .cat-btn.active { color: var(--accent); background: var(--accent-light); border-left-color: var(--accent); font-weight: 500; }
+
+  .cat-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text3);
+    background: var(--surface2);
+    padding: 1px 6px;
+    border-radius: 10px;
+  }
+
+  .cat-btn.active .cat-count { background: rgba(212,82,42,0.15); color: var(--accent); }
+
+  /* MAIN AREA */
+  .main {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .toolbar {
+    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--surface);
+  }
+
+  .toolbar-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    flex: 1;
+  }
+
+  .toolbar-btn {
+    padding: 0.4rem 0.9rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--text2);
+    font-size: 0.8rem;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .toolbar-btn:hover { background: var(--surface2); color: var(--text); }
+  .toolbar-btn.primary { background: var(--accent); color: white; border-color: var(--accent); }
+  .toolbar-btn.primary:hover { background: #b8421f; border-color: #b8421f; }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    height: 3px;
+    background: var(--surface2);
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.4s ease;
+  }
+
+  .study-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    gap: 1.5rem;
+    overflow-y: auto;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.8rem;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .stats-row .val { color: var(--text2); }
+  .stats-row .correct { color: var(--green); }
+  .stats-row .wrong { color: var(--red); }
+
+  /* FLASHCARD */
+  .card-scene {
+    perspective: 1200px;
+    width: 100%;
+    max-width: 520px;
+    height: var(--card-h);
+    cursor: pointer;
+  }
+
+  .card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .card.flipped { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  .card-back {
+    transform: rotateY(180deg);
+    background: var(--surface2);
+  }
+
+  .card-badge {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: 'DM Mono', monospace;
+    color: var(--text3);
+    margin-bottom: 0.75rem;
+  }
+
+  .card-word {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.4rem;
+    color: var(--text);
+    text-align: center;
+    line-height: 1.15;
+  }
+
+  .card-sub {
+    font-size: 0.82rem;
+    color: var(--text3);
+    margin-top: 0.5rem;
+    font-style: italic;
+    text-align: center;
+  }
+
+  .card-ex {
+    font-size: 0.82rem;
+    color: var(--text2);
+    margin-top: 0.75rem;
+    text-align: center;
+    max-width: 320px;
+    line-height: 1.5;
+    border-top: 1px solid var(--border);
+    padding-top: 0.75rem;
+  }
+
+  .flip-hint {
+    font-size: 0.75rem;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  .answer-row {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .ans-btn {
+    padding: 0.55rem 1.5rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid;
+    font-size: 0.85rem;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .ans-btn.correct {
+    border-color: var(--green);
+    color: var(--green);
+    background: var(--green-light);
+  }
+
+  .ans-btn.correct:hover { background: var(--green); color: white; }
+
+  .ans-btn.wrong {
+    border-color: var(--red);
+    color: var(--red);
+    background: var(--red-light);
+  }
+
+  .ans-btn.wrong:hover { background: var(--red); color: white; }
+
+  .nav-row {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  /* TYPING MODE */
+  .typing-card {
+    width: 100%;
+    max-width: 520px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .typing-prompt {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    text-align: center;
+    color: var(--text);
+  }
+
+  .typing-direction {
+    font-size: 0.75rem;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .type-input {
+    width: 100%;
+    max-width: 280px;
+    padding: 0.65rem 1rem;
+    border: 1.5px solid var(--border2);
+    border-radius: var(--radius-sm);
+    font-family: 'DM Mono', monospace;
+    font-size: 1rem;
+    background: var(--bg);
+    color: var(--text);
+    text-align: center;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .type-input:focus { border-color: var(--accent); }
+  .type-input.correct-input { border-color: var(--green); background: var(--green-light); }
+  .type-input.wrong-input { border-color: var(--red); background: var(--red-light); }
+
+  .type-feedback {
+    font-size: 0.9rem;
+    min-height: 1.4rem;
+    font-family: 'DM Mono', monospace;
+    text-align: center;
+  }
+
+  .type-feedback.correct { color: var(--green); }
+  .type-feedback.wrong { color: var(--red); }
+
+  .submit-btn {
+    padding: 0.55rem 2rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: white;
+    font-size: 0.88rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .submit-btn:hover { background: #b8421f; }
+  .submit-btn:disabled { opacity: 0.5; cursor: default; }
+
+  /* CONJUGATION */
+  .conj-card {
+    width: 100%;
+    max-width: 560px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  .conj-verb {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 0.25rem;
+  }
+
+  .conj-meaning {
+    text-align: center;
+    color: var(--text3);
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+  }
+
+  .conj-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+
+  .conj-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .conj-pronoun {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--text3);
+    width: 56px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+
+  .conj-input {
+    flex: 1;
+    padding: 0.45rem 0.75rem;
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.88rem;
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .conj-input:focus { border-color: var(--accent); }
+  .conj-input.correct { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .conj-input.wrong { border-color: var(--red); background: var(--red-light); color: var(--red); }
+  .conj-input.revealed { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+
+  .conj-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 0.6rem;
+    justify-content: center;
+  }
+
+  /* COMPLETE SCREEN */
+  .complete {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .complete-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+
+  .complete h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    letter-spacing: -0.02em;
+  }
+
+  .complete p { color: var(--text2); font-size: 0.9rem; }
+
+  .score-pill {
+    display: inline-block;
+    padding: 0.4rem 1.25rem;
+    border-radius: 100px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 640px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .card-word { font-size: 1.8rem; }
+  }
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="logo">Follow-Up</div>
-  <div class="search-wrap">
-    <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="text" id="search" placeholder="Search contacts..." oninput="render()">
-  </div>
-  <div class="topbar-right">
-    <button id="map-toggle-btn" onclick="toggleMapView()" style="font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;border:1.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;">Map view</button>
-    <button class="primary" onclick="openAdd()">+ Add contact</button>
-    <button id="api-pill" onclick="openApiModal()" style="font-size:11px;font-weight:700;padding:5px 11px;border-radius:20px;gap:5px;transition:all .2s;"></button>
-  </div>
-</div>
-<div class="board-tabs-bar" id="board-tabs-bar">
-  <!-- filled by renderBoardTabs() -->
-</div>
+<header>
+  <h1>Nederlands Leren</h1>
+  <span>Dutch Study App</span>
+</header>
 
-<div class="board-wrap">
-  <div class="board" id="board">
-    <div class="col" data-col="todo">
-      <div class="col-header"><div class="col-pip"></div><div class="col-title">To Do</div><div class="col-badge" id="cnt-todo">0</div></div>
-      <div class="col-scroll" id="cards-todo"></div>
-      <div class="col-addbtn"><button onclick="openAdd('todo')">+ Add</button></div>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Mode</div>
+      <button class="mode-btn active" data-mode="flashcard" onclick="setMode('flashcard')">
+        <span class="mode-icon">🃏</span> Flashcards
+      </button>
+      <button class="mode-btn" data-mode="typing" onclick="setMode('typing')">
+        <span class="mode-icon">⌨️</span> Typing
+      </button>
+      <button class="mode-btn" data-mode="conjugation" onclick="setMode('conjugation')">
+        <span class="mode-icon">📝</span> Conjugation
+      </button>
     </div>
-    <div class="col" data-col="outreach">
-      <div class="col-header"><div class="col-pip"></div><div class="col-title">Outreach Sent</div><div class="col-badge" id="cnt-outreach">0</div></div>
-      <div class="col-scroll" id="cards-outreach"></div>
-      <div class="col-addbtn"><button onclick="openAdd('outreach')">+ Add</button></div>
-    </div>
-    <div class="col" data-col="dialogue">
-      <div class="col-header"><div class="col-pip"></div><div class="col-title">In Dialogue</div><div class="col-badge" id="cnt-dialogue">0</div></div>
-      <div class="col-scroll" id="cards-dialogue"></div>
-      <div class="col-addbtn"><button onclick="openAdd('dialogue')">+ Add</button></div>
-    </div>
-    <div class="col" data-col="done">
-      <div class="col-header"><div class="col-pip"></div><div class="col-title">Done</div><div class="col-badge" id="cnt-done">0</div></div>
-      <div class="col-scroll" id="cards-done"></div>
-      <div class="col-addbtn"><button onclick="openAdd('done')">+ Add</button></div>
-    </div>
-  </div>
-  <div class="statusbar">
-    <div class="sdot"></div>
-    <span id="sbar">Loading...</span>
-    <span id="sync-status" style="margin-left:auto;display:flex;align-items:center;gap:5px;"></span>
-  </div>
-</div>
 
-<!-- Map view -->
-<div id="map-wrap" style="display:none;flex:1;position:relative;overflow:hidden;background:#0c0e11;">
-  <canvas id="map-canvas" style="width:100%;height:100%;display:block;"></canvas>
-  <div id="map-legend" style="position:absolute;bottom:20px;left:20px;display:flex;flex-wrap:wrap;gap:6px;max-width:55%;"></div>
-  <div id="map-tooltip" style="position:fixed;display:none;background:rgba(12,14,17,0.96);border:0.5px solid rgba(255,255,255,0.14);border-radius:7px;padding:9px 13px;font-size:11px;pointer-events:none;box-shadow:0 4px 24px rgba(0,0,0,.4);max-width:220px;z-index:200;line-height:1.6;backdrop-filter:blur(10px);"></div>
-  <div style="position:absolute;top:14px;right:16px;font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:0.03em;">Drag · Scroll to zoom · Click to open contact</div>
-  <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(255,255,255,0.2);letter-spacing:0.04em;text-transform:uppercase;" id="map-board-label"></div>
-</div>
-
-<!-- Side panel -->
-<div class="backdrop" id="backdrop" onclick="closePanel()"></div>
-<div class="panel" id="panel">
-  <div class="panel-hdr">
-    <div class="av" id="pav" style="width:40px;height:40px;"></div>
-    <div class="panel-hdr-meta">
-      <div class="panel-name" id="pname"></div>
-      <div class="panel-sub" id="psub"></div>
+    <div class="sidebar-section" id="vocab-cats">
+      <div class="sidebar-label">Vocabulary</div>
+      <!-- injected by JS -->
     </div>
-    <select id="pstatus" style="width:auto;font-size:12px;" onchange="updC({status:this.value})">
-      <option value="todo">To Do</option>
-      <option value="outreach">Outreach Sent</option>
-      <option value="dialogue">In Dialogue</option>
-      <option value="done">Done</option>
-    </select>
-    <button class="icon-btn" onclick="closePanel()">&#x2715;</button>
-  </div>
-  <div class="panel-tabs">
-    <button class="ptab active" onclick="switchPTab('overview',this)">Overview</button>
-    <button class="ptab" onclick="switchPTab('issues',this)">Issues &amp; tags</button>
-    <button class="ptab" onclick="switchPTab('tasks',this)" id="ptab-tasks">Tasks</button>
-    <button class="ptab" onclick="switchPTab('email',this)">Email draft</button>
-  </div>
-  <div class="panel-body" id="pbody"></div>
-</div>
 
-<!-- Add modal -->
-<div class="mbackdrop" id="add-modal">
-  <div class="modal">
-    <div class="modal-hdr"><h2>Add contact</h2><button class="icon-btn" onclick="closeAdd()">&#x2715;</button></div>
-    <div class="modal-body" id="add-body"></div>
-  </div>
-</div>
-
-<!-- New event modal -->
-<div class="mbackdrop" id="new-event-modal">
-  <div class="modal" style="width:400px;">
-    <div class="modal-hdr"><h2>New event board</h2><button class="icon-btn" onclick="closeNewEventModal()">&#x2715;</button></div>
-    <div class="modal-body">
-      <p style="font-size:13px;color:var(--text2);margin-bottom:12px;">Create a new board for a conference or event. You can switch between boards any time.</p>
-      <label class="fl">Event name</label>
-      <input type="text" id="new-event-inp" placeholder="e.g. World Bank Spring Meetings 2025..." style="margin-bottom:4px;">
+    <div class="sidebar-section" id="verb-cats" style="display:none;">
+      <div class="sidebar-label">Verbs</div>
+      <!-- injected by JS -->
     </div>
-    <div class="modal-foot">
-      <button onclick="closeNewEventModal()">Cancel</button>
-      <button class="primary" onclick="createEventBoard()">Create board</button>
-    </div>
-  </div>
-</div>
+  </aside>
 
-<!-- API key modal -->
-<div class="mbackdrop" id="api-modal">
-  <div class="modal" style="width:420px;">
-    <div class="modal-hdr"><h2>Anthropic API Key</h2><button class="icon-btn" onclick="closeApiModal()">&#x2715;</button></div>
-    <div class="modal-body">
-      <div id="api-current-wrap" style="display:none;background:var(--col);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:16px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-          <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);">Current key</span>
-          <span id="api-status-chip" style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:#e4f4ef;color:#0d7a5f;">Active</span>
+  <!-- MAIN -->
+  <div class="main">
+    <div class="toolbar">
+      <div class="toolbar-title" id="toolbar-title">Basics</div>
+      <button class="toolbar-btn" onclick="shuffle()">🔀 Shuffle</button>
+      <button class="toolbar-btn" onclick="resetDeck()">↺ Restart</button>
+      <button class="toolbar-btn primary" id="wrong-btn" onclick="studyWrong()" style="display:none;">Study incorrect</button>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+
+    <div class="study-area" id="study-area">
+
+      <!-- FLASHCARD VIEW -->
+      <div id="fc-view">
+        <div class="stats-row">
+          <span><span class="val" id="fc-idx">1</span> / <span id="fc-total">1</span></span>
+          <span class="correct">✓ <span id="fc-correct">0</span></span>
+          <span class="wrong">✗ <span id="fc-wrong">0</span></span>
         </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
-          <span id="api-masked" style="font-family:monospace;font-size:12px;color:var(--text);"></span>
-          <button onclick="clearKey()" style="font-size:11px;color:#b00;border-color:#fca5a5;background:#fee2e2;padding:4px 10px;">Remove</button>
+
+        <div class="card-scene" onclick="flipCard()">
+          <div class="card" id="fc-card">
+            <div class="card-face">
+              <div class="card-badge" id="fc-front-label">Dutch</div>
+              <div class="card-word" id="fc-front-word">—</div>
+              <div class="card-sub" id="fc-front-sub"></div>
+            </div>
+            <div class="card-face card-back">
+              <div class="card-badge" id="fc-back-label">English</div>
+              <div class="card-word" id="fc-back-word"></div>
+              <div class="card-ex" id="fc-back-ex"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip-hint" id="fc-hint">Click to flip</div>
+
+        <div class="answer-row hidden" id="fc-answer-row">
+          <button class="ans-btn wrong" onclick="fcAnswer(false)">✗ Incorrect</button>
+          <button class="ans-btn correct" onclick="fcAnswer(true)">✓ Correct</button>
+        </div>
+
+        <div class="nav-row" id="fc-nav-row">
+          <button class="toolbar-btn" onclick="fcPrev()">← Prev</button>
+          <button class="toolbar-btn" onclick="flipCard()">Flip</button>
+          <button class="toolbar-btn" onclick="fcNext()">Next →</button>
         </div>
       </div>
-      <label class="fl" id="api-input-label">Enter API key</label>
-      <div style="position:relative;margin-bottom:8px;">
-        <input type="password" id="apikey" placeholder="sk-ant-..." style="padding-right:42px;font-family:monospace;font-size:12px;" oninput="onKeyInput()">
-        <button onclick="toggleShow()" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:none;padding:4px 6px;font-size:13px;color:var(--text3);">&#128065;</button>
+
+      <!-- TYPING VIEW -->
+      <div id="ty-view" class="hidden">
+        <div class="stats-row">
+          <span><span class="val" id="ty-idx">1</span> / <span id="ty-total">1</span></span>
+          <span class="correct">✓ <span id="ty-correct">0</span></span>
+          <span class="wrong">✗ <span id="ty-wrong">0</span></span>
+        </div>
+
+        <div class="typing-card">
+          <div class="typing-direction" id="ty-direction">Dutch → English</div>
+          <div class="typing-prompt" id="ty-prompt">—</div>
+          <div class="card-sub" id="ty-sub"></div>
+          <input class="type-input" id="ty-input" placeholder="type your answer…" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkTyping()" />
+          <div class="type-feedback" id="ty-feedback"></div>
+          <div style="display:flex;gap:0.5rem">
+            <button class="toolbar-btn" onclick="revealTyping()">Reveal</button>
+            <button class="submit-btn" onclick="checkTyping()">Check →</button>
+          </div>
+        </div>
       </div>
-      <div id="api-msg" style="font-size:12px;min-height:18px;margin-bottom:10px;"></div>
-      <p style="font-size:11px;color:var(--text3);">Stored in your browser only. Get a key at <a href="https://console.anthropic.com" target="_blank" style="color:var(--teal);">console.anthropic.com</a>.</p>
-    </div>
-    <div class="modal-foot">
-      <button onclick="closeApiModal()">Cancel</button>
-      <button id="test-btn" onclick="testKey()" style="display:none;">Test key</button>
-      <button class="primary" id="save-key-btn" onclick="saveApiKey()" disabled style="opacity:.45;">Save key</button>
+
+      <!-- CONJUGATION VIEW -->
+      <div id="cj-view" class="hidden">
+        <div class="stats-row">
+          <span><span class="val" id="cj-idx">1</span> / <span id="cj-total">1</span></span>
+          <span class="correct">✓ <span id="cj-correct">0</span></span>
+          <span class="wrong">✗ <span id="cj-wrong">0</span></span>
+        </div>
+
+        <div class="conj-card">
+          <div class="conj-verb" id="cj-verb">—</div>
+          <div class="conj-meaning" id="cj-meaning"></div>
+          <div class="conj-grid" id="cj-grid"></div>
+          <div class="conj-actions">
+            <button class="toolbar-btn" onclick="checkConj()">Check</button>
+            <button class="toolbar-btn" onclick="revealConj()">Reveal all</button>
+            <button class="toolbar-btn primary" onclick="nextConj()">Next →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMPLETE SCREEN -->
+      <div id="complete-view" class="hidden complete">
+        <div class="complete-icon">🎉</div>
+        <h2>Goed gedaan!</h2>
+        <p id="complete-msg"></p>
+        <div class="score-pill" id="complete-pill" style="background:var(--green-light);color:var(--green)"></div>
+        <div style="display:flex;gap:0.75rem;margin-top:0.5rem">
+          <button class="toolbar-btn" onclick="resetDeck()">Restart all</button>
+          <button class="toolbar-btn primary" id="retry-wrong-btn" onclick="studyWrong()">Study incorrect</button>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
-
-<div id="debug-panel" style="display:none;position:fixed;bottom:40px;right:16px;width:300px;background:#1e1e1e;color:#0f0;font-family:monospace;font-size:11px;padding:12px;border-radius:8px;z-index:9999;max-height:300px;overflow-y:auto;line-height:1.6;">
-  <div style="color:#fff;font-weight:bold;margin-bottom:6px;">Drag Debug Log <button onclick="document.getElementById('debug-log').innerHTML=''" style="font-size:10px;padding:1px 6px;margin-left:8px;background:#333;color:#fff;border-color:#555;">Clear</button></div>
-  <div id="debug-log"></div>
-</div>
-
-<div class="toast" id="toast"></div>
 
 <script>
-// ── Config ────────────────────────────────────────────────────────────
-const SB_URL='https://qkedzkejcxurlbvgrejn.supabase.co';
-const SB_KEY='sb_publishable_A19b81BUorSUGg4mk3Rueg_2R9ld5PI';
-const AI_MODELS=['claude-sonnet-4-6','claude-3-haiku-20240307'];
-const db=supabase.createClient(SB_URL,SB_KEY);
+/* ===== DATA ===== */
+const VOCAB = {
+  basics: {
+    label: "Basics",
+    cards: [
+      { nl:"hallo", en:"hello", ex:"Hallo! Hoe gaat het?" },
+      { nl:"dankjewel", en:"thank you", ex:"Dankjewel voor de hulp!" },
+      { nl:"ja", en:"yes", ex:"Ja, dat klopt." },
+      { nl:"nee", en:"no", ex:"Nee, dat is niet juist." },
+      { nl:"alsjeblieft", en:"please / here you go", ex:"Een koffie, alsjeblieft." },
+      { nl:"sorry", en:"sorry / excuse me", ex:"Sorry, ik begrijp het niet." },
+      { nl:"goedemorgen", en:"good morning", ex:"Goedemorgen! Sliep je goed?" },
+      { nl:"goedemiddag", en:"good afternoon", ex:"Goedemiddag, meneer." },
+      { nl:"goedenavond", en:"good evening", ex:"Goedenavond iedereen!" },
+      { nl:"tot ziens", en:"goodbye", ex:"Tot ziens! Tot volgende week." },
+      { nl:"tot morgen", en:"see you tomorrow", ex:"Goed gedaan! Tot morgen." },
+      { nl:"hoe gaat het?", en:"how are you?", ex:"Hoi! Hoe gaat het met je?" },
+      { nl:"goed", en:"good / well", ex:"Het gaat goed, dankjewel." },
+      { nl:"slecht", en:"bad / badly", ex:"Het gaat niet zo slecht." },
+    ]
+  },
+  numbers: {
+    label: "Numbers",
+    cards: [
+      { nl:"één", en:"one" },
+      { nl:"twee", en:"two" },
+      { nl:"drie", en:"three" },
+      { nl:"vier", en:"four" },
+      { nl:"vijf", en:"five" },
+      { nl:"zes", en:"six" },
+      { nl:"zeven", en:"seven" },
+      { nl:"acht", en:"eight" },
+      { nl:"negen", en:"nine" },
+      { nl:"tien", en:"ten" },
+      { nl:"elf", en:"eleven" },
+      { nl:"twaalf", en:"twelve" },
+      { nl:"twintig", en:"twenty" },
+      { nl:"dertig", en:"thirty" },
+      { nl:"honderd", en:"hundred" },
+      { nl:"duizend", en:"thousand" },
+    ]
+  },
+  nouns: {
+    label: "Nouns",
+    cards: [
+      { nl:"de kat", en:"the cat", sub:"de (common)", ex:"De kat zit op de mat." },
+      { nl:"het huis", en:"the house", sub:"het (neuter)", ex:"Het huis is groot." },
+      { nl:"de fiets", en:"the bicycle", sub:"de (common)", ex:"Ik rijd op de fiets." },
+      { nl:"het water", en:"the water", sub:"het (neuter)", ex:"Mag ik wat water?" },
+      { nl:"de hond", en:"the dog", sub:"de (common)", ex:"De hond loopt in het park." },
+      { nl:"het boek", en:"the book", sub:"het (neuter)", ex:"Ik lees een interessant boek." },
+      { nl:"de stad", en:"the city", sub:"de (common)", ex:"Amsterdam is een mooie stad." },
+      { nl:"de man", en:"the man", sub:"de (common)", ex:"De man loopt naar huis." },
+      { nl:"de vrouw", en:"the woman", sub:"de (common)", ex:"De vrouw werkt in het ziekenhuis." },
+      { nl:"het kind", en:"the child", sub:"het (neuter)", ex:"Het kind speelt buiten." },
+      { nl:"de auto", en:"the car", sub:"de (common)", ex:"De auto staat voor de deur." },
+      { nl:"het brood", en:"the bread", sub:"het (neuter)", ex:"Ik eet een boterham met brood." },
+      { nl:"de straat", en:"the street", sub:"de (common)", ex:"Wij wonen in een rustige straat." },
+      { nl:"het land", en:"the country", sub:"het (neuter)", ex:"Nederland is een mooi land." },
+      { nl:"de school", en:"the school", sub:"de (common)", ex:"De kinderen gaan naar school." },
+    ]
+  },
+  colours: {
+    label: "Colours",
+    cards: [
+      { nl:"rood", en:"red", ex:"De appel is rood." },
+      { nl:"blauw", en:"blue", ex:"De lucht is blauw." },
+      { nl:"groen", en:"green", ex:"Het gras is groen." },
+      { nl:"geel", en:"yellow", ex:"De zon is geel." },
+      { nl:"wit", en:"white", ex:"De sneeuw is wit." },
+      { nl:"zwart", en:"black", ex:"De nacht is zwart." },
+      { nl:"oranje", en:"orange", ex:"Oranje is de nationale kleur." },
+      { nl:"paars", en:"purple", ex:"De bloem is paars." },
+      { nl:"roze", en:"pink", ex:"De flamingo is roze." },
+      { nl:"bruin", en:"brown", ex:"De chocolade is bruin." },
+      { nl:"grijs", en:"grey", ex:"De lucht is grijs vandaag." },
+    ]
+  },
+  food: {
+    label: "Food & Drink",
+    cards: [
+      { nl:"het brood", en:"bread", ex:"Wil je een boterham?" },
+      { nl:"de kaas", en:"cheese", ex:"Nederlandse kaas is lekker!" },
+      { nl:"de melk", en:"milk", ex:"Ik drink een glas melk." },
+      { nl:"het water", en:"water", ex:"Een glas water, alsjeblieft." },
+      { nl:"de koffie", en:"coffee", ex:"Ik drink elke ochtend koffie." },
+      { nl:"de thee", en:"tea", ex:"Wil je een kopje thee?" },
+      { nl:"het bier", en:"beer", ex:"Een biertje, graag." },
+      { nl:"de appel", en:"apple", ex:"Een appel per dag." },
+      { nl:"het vlees", en:"meat", ex:"Ik eet geen vlees." },
+      { nl:"de vis", en:"fish", ex:"Verse vis van de markt." },
+      { nl:"de groente", en:"vegetables", ex:"Eet meer groente!" },
+      { nl:"het ei", en:"egg", ex:"Twee gebakken eieren." },
+      { nl:"de stroopwafel", en:"syrup waffle", ex:"Stroopwafels zijn typisch Nederlands." },
+      { nl:"de haring", en:"herring", ex:"Rauwe haring eten is een traditie." },
+    ]
+  },
+  days: {
+    label: "Days & Time",
+    cards: [
+      { nl:"maandag", en:"Monday" },
+      { nl:"dinsdag", en:"Tuesday" },
+      { nl:"woensdag", en:"Wednesday" },
+      { nl:"donderdag", en:"Thursday" },
+      { nl:"vrijdag", en:"Friday" },
+      { nl:"zaterdag", en:"Saturday" },
+      { nl:"zondag", en:"Sunday" },
+      { nl:"vandaag", en:"today", ex:"Vandaag is het mooi weer." },
+      { nl:"morgen", en:"tomorrow", ex:"Morgen ga ik naar Amsterdam." },
+      { nl:"gisteren", en:"yesterday", ex:"Gisteren was het koud." },
+      { nl:"nu", en:"now", ex:"Ik moet nu gaan." },
+      { nl:"later", en:"later", ex:"We spreken later." },
+      { nl:"de week", en:"the week", ex:"Deze week ben ik vrij." },
+      { nl:"de maand", en:"the month", ex:"Welke maand is het?" },
+      { nl:"het jaar", en:"the year", ex:"Een nieuw jaar begint." },
+    ]
+  },
+  travel: {
+    label: "Travel",
+    cards: [
+      { nl:"het vliegveld", en:"airport", ex:"We gaan naar het vliegveld." },
+      { nl:"het station", en:"train station", ex:"Het station is in het centrum." },
+      { nl:"de trein", en:"train", ex:"De trein naar Utrecht vertrekt om 10 uur." },
+      { nl:"de bus", en:"bus", ex:"De bus rijdt elk kwartier." },
+      { nl:"het hotel", en:"hotel", ex:"We overnachten in een hotel." },
+      { nl:"de kamer", en:"room", ex:"Ik wil een eenpersoonskamer." },
+      { nl:"de kaart", en:"map / ticket", ex:"Heeft u een kaart van de stad?" },
+      { nl:"rechts", en:"right", ex:"Sla rechts af bij de hoek." },
+      { nl:"links", en:"left", ex:"Ga links bij het stoplicht." },
+      { nl:"rechtdoor", en:"straight ahead", ex:"Ga rechtdoor." },
+      { nl:"hoe ver is het?", en:"how far is it?", ex:"Hoe ver is het naar het centrum?" },
+      { nl:"de fiets", en:"bicycle", ex:"In Nederland rijdt iedereen fiets." },
+    ]
+  },
+  adjectives: {
+    label: "Adjectives",
+    cards: [
+      { nl:"groot", en:"big / large", ex:"Het huis is groot." },
+      { nl:"klein", en:"small / little", ex:"De kat is klein." },
+      { nl:"oud", en:"old", ex:"Dit gebouw is oud." },
+      { nl:"nieuw", en:"new", ex:"Ik heb een nieuwe fiets." },
+      { nl:"mooi", en:"beautiful / nice", ex:"Wat een mooi weer!" },
+      { nl:"lelijk", en:"ugly", ex:"Die kleur is lelijk." },
+      { nl:"snel", en:"fast / quick", ex:"De trein is erg snel." },
+      { nl:"langzaam", en:"slow", ex:"Ga alsjeblieft niet zo langzaam." },
+      { nl:"warm", en:"warm / hot", ex:"Het is warm vandaag." },
+      { nl:"koud", en:"cold", ex:"De winter is koud." },
+      { nl:"lekker", en:"tasty / nice / pleasant", ex:"Dit eten is lekker!" },
+      { nl:"leuk", en:"fun / nice", ex:"Dat is een leuk idee." },
+      { nl:"moe", en:"tired", ex:"Ik ben erg moe." },
+      { nl:"ziek", en:"sick / ill", ex:"Ik ben vandaag ziek." },
+    ]
+  }
+};
 
-// ── Palettes ──────────────────────────────────────────────────────────
-const AV=[['#B5D4F4','#0C447C'],['#9FE1CB','#085041'],['#FAC775','#633806'],['#CECBF6','#3C3489'],['#F5C4B3','#712B13'],['#C0DD97','#27500A'],['#F4C0D1','#72243E']];
-const TP=[{bg:'#E6F1FB',fg:'#185FA5'},{bg:'#E1F5EE',fg:'#0F6E56'},{bg:'#FAEEDA',fg:'#854F0B'},{bg:'#EEEDFE',fg:'#534AB7'},{bg:'#FAECE7',fg:'#993C1D'},{bg:'#EAF3DE',fg:'#3B6D11'},{bg:'#FBEAF0',fg:'#72243E'}];
-const PCOL={Evan:{bg:'#B5D4F4',fg:'#0C447C'},Beryl:{bg:'#9FE1CB',fg:'#085041'},Aaron:{bg:'#FAC775',fg:'#633806'}};
-function avC(n){return AV[(n||'A').charCodeAt(0)%AV.length];}
-function tpC(t){return TP[((t||'').charCodeAt(0)+(t||'').length)%TP.length];}
-function ini(n){return(n||'').trim().split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase()||'?';}
-function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+const VERBS = {
+  zijn: {
+    label:"zijn — to be",
+    infinitive:"zijn", meaning:"to be",
+    forms:[
+      {pronoun:"ik", form:"ben"},
+      {pronoun:"jij/je", form:"bent"},
+      {pronoun:"hij/zij", form:"is"},
+      {pronoun:"wij", form:"zijn"},
+      {pronoun:"jullie", form:"zijn"},
+      {pronoun:"zij", form:"zijn"},
+    ]
+  },
+  hebben: {
+    label:"hebben — to have",
+    infinitive:"hebben", meaning:"to have",
+    forms:[
+      {pronoun:"ik", form:"heb"},
+      {pronoun:"jij/je", form:"hebt"},
+      {pronoun:"hij/zij", form:"heeft"},
+      {pronoun:"wij", form:"hebben"},
+      {pronoun:"jullie", form:"hebben"},
+      {pronoun:"zij", form:"hebben"},
+    ]
+  },
+  gaan: {
+    label:"gaan — to go",
+    infinitive:"gaan", meaning:"to go",
+    forms:[
+      {pronoun:"ik", form:"ga"},
+      {pronoun:"jij/je", form:"gaat"},
+      {pronoun:"hij/zij", form:"gaat"},
+      {pronoun:"wij", form:"gaan"},
+      {pronoun:"jullie", form:"gaan"},
+      {pronoun:"zij", form:"gaan"},
+    ]
+  },
+  doen: {
+    label:"doen — to do",
+    infinitive:"doen", meaning:"to do",
+    forms:[
+      {pronoun:"ik", form:"doe"},
+      {pronoun:"jij/je", form:"doet"},
+      {pronoun:"hij/zij", form:"doet"},
+      {pronoun:"wij", form:"doen"},
+      {pronoun:"jullie", form:"doen"},
+      {pronoun:"zij", form:"doen"},
+    ]
+  },
+  werken: {
+    label:"werken — to work",
+    infinitive:"werken", meaning:"to work",
+    forms:[
+      {pronoun:"ik", form:"werk"},
+      {pronoun:"jij/je", form:"werkt"},
+      {pronoun:"hij/zij", form:"werkt"},
+      {pronoun:"wij", form:"werken"},
+      {pronoun:"jullie", form:"werken"},
+      {pronoun:"zij", form:"werken"},
+    ]
+  },
+  spreken: {
+    label:"spreken — to speak",
+    infinitive:"spreken", meaning:"to speak",
+    forms:[
+      {pronoun:"ik", form:"spreek"},
+      {pronoun:"jij/je", form:"spreekt"},
+      {pronoun:"hij/zij", form:"spreekt"},
+      {pronoun:"wij", form:"spreken"},
+      {pronoun:"jullie", form:"spreken"},
+      {pronoun:"zij", form:"spreken"},
+    ]
+  },
+  maken: {
+    label:"maken — to make",
+    infinitive:"maken", meaning:"to make",
+    forms:[
+      {pronoun:"ik", form:"maak"},
+      {pronoun:"jij/je", form:"maakt"},
+      {pronoun:"hij/zij", form:"maakt"},
+      {pronoun:"wij", form:"maken"},
+      {pronoun:"jullie", form:"maken"},
+      {pronoun:"zij", form:"maken"},
+    ]
+  },
+  komen: {
+    label:"komen — to come",
+    infinitive:"komen", meaning:"to come",
+    forms:[
+      {pronoun:"ik", form:"kom"},
+      {pronoun:"jij/je", form:"komt"},
+      {pronoun:"hij/zij", form:"komt"},
+      {pronoun:"wij", form:"komen"},
+      {pronoun:"jullie", form:"komen"},
+      {pronoun:"zij", form:"komen"},
+    ]
+  },
+  zien: {
+    label:"zien — to see",
+    infinitive:"zien", meaning:"to see",
+    forms:[
+      {pronoun:"ik", form:"zie"},
+      {pronoun:"jij/je", form:"ziet"},
+      {pronoun:"hij/zij", form:"ziet"},
+      {pronoun:"wij", form:"zien"},
+      {pronoun:"jullie", form:"zien"},
+      {pronoun:"zij", form:"zien"},
+    ]
+  },
+  willen: {
+    label:"willen — to want",
+    infinitive:"willen", meaning:"to want",
+    forms:[
+      {pronoun:"ik", form:"wil"},
+      {pronoun:"jij/je", form:"wilt"},
+      {pronoun:"hij/zij", form:"wil"},
+      {pronoun:"wij", form:"willen"},
+      {pronoun:"jullie", form:"willen"},
+      {pronoun:"zij", form:"willen"},
+    ]
+  },
+  kunnen: {
+    label:"kunnen — can / to be able",
+    infinitive:"kunnen", meaning:"can / to be able to",
+    forms:[
+      {pronoun:"ik", form:"kan"},
+      {pronoun:"jij/je", form:"kunt"},
+      {pronoun:"hij/zij", form:"kan"},
+      {pronoun:"wij", form:"kunnen"},
+      {pronoun:"jullie", form:"kunnen"},
+      {pronoun:"zij", form:"kunnen"},
+    ]
+  },
+  eten: {
+    label:"eten — to eat",
+    infinitive:"eten", meaning:"to eat",
+    forms:[
+      {pronoun:"ik", form:"eet"},
+      {pronoun:"jij/je", form:"eet"},
+      {pronoun:"hij/zij", form:"eet"},
+      {pronoun:"wij", form:"eten"},
+      {pronoun:"jullie", form:"eten"},
+      {pronoun:"zij", form:"eten"},
+    ]
+  },
+};
 
-// ── State ─────────────────────────────────────────────────────────────
-let contacts=[], currentId=null, activeTag='', addTargetCol='todo', currentTab='overview';
-let currentSource=localStorage.getItem('cf_source')||'Skoll World Forum';
-let currentBoard=localStorage.getItem('cf_board')||'Skoll World Forum'; // active board filter
-const scenarioMap={};
-const COLS=['todo','outreach','dialogue','done'];
+/* ===== STATE ===== */
+let mode = 'flashcard';
+let activeCat = 'basics';
+let activeVerb = 'zijn';
+let deck = [];
+let deckIdx = 0;
+let fcFlipped = false;
+let fcCorrect = 0, fcWrong = 0;
+let wrongCards = [];
+let tyAnswered = false;
+let cjCorrect = 0, cjWrong = 0;
+let cjIdx = 0;
+let cjDeck = [];
 
-// ── Supabase helpers ──────────────────────────────────────────────────
-function toDb(c){
-  return{id:c.id,name:c.name||'',title:c.title||'',org:c.org||'',email:c.email||'',phone:c.phone||'',
-    description:c.description||'',issues:c.issues||[],tags:c.tags||[],assignees:c.assignees||[],
-    tasks:c.tasks||[],email_draft:c.emailDraft||'',source:c.source||'',status:c.status||'todo',
-    linkedin:c.linkedin||'',
-    created_at:c.createdAt||new Date().toISOString(),updated_at:new Date().toISOString()};
+/* ===== SIDEBAR ===== */
+function buildSidebar() {
+  const vocabSection = document.getElementById('vocab-cats');
+  Object.entries(VOCAB).forEach(([key, cat]) => {
+    const b = document.createElement('button');
+    b.className = 'cat-btn' + (key === activeCat ? ' active' : '');
+    b.dataset.cat = key;
+    b.innerHTML = `${cat.label} <span class="cat-count">${cat.cards.length}</span>`;
+    b.onclick = () => { activeCat = key; loadVocab(); buildSidebar(); };
+    vocabSection.appendChild(b);
+  });
+
+  const verbSection = document.getElementById('verb-cats');
+  Object.entries(VERBS).forEach(([key, verb]) => {
+    const b = document.createElement('button');
+    b.className = 'cat-btn' + (key === activeVerb ? ' active' : '');
+    b.dataset.verb = key;
+    b.innerHTML = `<span style="font-family:'DM Mono',monospace;font-size:0.8rem">${verb.infinitive}</span>`;
+    b.onclick = () => { activeVerb = key; loadConjugation(); buildSidebar(); };
+    verbSection.appendChild(b);
+  });
 }
-function fromDb(r){
-  return{id:r.id,name:r.name||'',title:r.title||'',org:r.org||'',email:r.email||'',phone:r.phone||'',
-    description:r.description||'',issues:r.issues||[],tags:r.tags||[],assignees:r.assignees||[],
-    tasks:r.tasks||[],emailDraft:r.email_draft||'',source:r.source||'Skoll World Forum',status:r.status||'todo',createdAt:r.created_at,linkedin:r.linkedin||''};
+
+/* ===== MODE ===== */
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === m));
+  document.getElementById('vocab-cats').style.display = m === 'conjugation' ? 'none' : '';
+  document.getElementById('verb-cats').style.display = m === 'conjugation' ? '' : 'none';
+  document.getElementById('fc-view').classList.toggle('hidden', m !== 'flashcard');
+  document.getElementById('ty-view').classList.toggle('hidden', m !== 'typing');
+  document.getElementById('cj-view').classList.toggle('hidden', m !== 'conjugation');
+  document.getElementById('complete-view').classList.add('hidden');
+
+  if (m === 'flashcard') loadVocab();
+  else if (m === 'typing') loadTyping();
+  else if (m === 'conjugation') loadConjugation();
 }
 
-// ── Storage ───────────────────────────────────────────────────────────
-function cacheLocal(){try{localStorage.setItem('skoll_cfk',JSON.stringify(contacts));}catch{}}
-function getKey(){return localStorage.getItem('cf_api_key')||'';}
+/* ===== FLASHCARD ===== */
+function loadVocab(wrongOnly) {
+  const cat = VOCAB[activeCat];
+  document.getElementById('toolbar-title').textContent = cat.label;
+  wrongCards = wrongOnly ? wrongCards : [];
+  const source = wrongOnly ? wrongCards : cat.cards;
+  deck = [...source];
+  deckIdx = 0; fcCorrect = 0; fcWrong = 0; wrongCards = [];
+  document.getElementById('wrong-btn').style.display = 'none';
+  document.getElementById('complete-view').classList.add('hidden');
+  document.getElementById('fc-view').classList.remove('hidden');
+  renderFC();
+}
 
-async function load(){
-  setSyncStatus('syncing');
-  try{
-    const{data,error}=await db.from('contacts').select('*').order('created_at');
-    if(error)throw error;
-    if(!data.length){
-      // Truly empty DB — seed with demo data
-      contacts=getSkollData();
-      await db.from('contacts').upsert(contacts.map(toDb));
+function shuffleArr(a) { for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+function shuffle() {
+  if (mode === 'flashcard') { shuffleArr(deck); deckIdx=0; renderFC(); }
+  else if (mode === 'typing') { shuffleArr(deck); deckIdx=0; renderTyping(); }
+  else if (mode === 'conjugation') { shuffleArr(cjDeck); cjIdx=0; renderConj(); }
+}
+
+function resetDeck() {
+  if (mode === 'flashcard') loadVocab();
+  else if (mode === 'typing') loadTyping();
+  else if (mode === 'conjugation') loadConjugation();
+}
+
+function studyWrong() {
+  if (mode === 'flashcard') loadVocab(true);
+  else if (mode === 'typing') loadTyping(true);
+}
+
+function renderFC() {
+  if (deckIdx >= deck.length) { showComplete('fc'); return; }
+  const c = deck[deckIdx];
+  fcFlipped = false;
+  document.getElementById('fc-card').classList.remove('flipped');
+  document.getElementById('fc-front-word').textContent = c.nl;
+  document.getElementById('fc-front-sub').textContent = c.sub || '';
+  document.getElementById('fc-back-word').textContent = c.en;
+  document.getElementById('fc-back-ex').textContent = c.ex || '';
+  document.getElementById('fc-answer-row').classList.add('hidden');
+  document.getElementById('fc-nav-row').classList.remove('hidden');
+  document.getElementById('fc-hint').textContent = 'Click to flip';
+  document.getElementById('fc-idx').textContent = deckIdx + 1;
+  document.getElementById('fc-total').textContent = deck.length;
+  document.getElementById('fc-correct').textContent = fcCorrect;
+  document.getElementById('fc-wrong').textContent = fcWrong;
+  document.getElementById('prog').style.width = Math.round(deckIdx / deck.length * 100) + '%';
+}
+
+function flipCard() {
+  if (deckIdx >= deck.length) return;
+  fcFlipped = !fcFlipped;
+  document.getElementById('fc-card').classList.toggle('flipped', fcFlipped);
+  if (fcFlipped) {
+    document.getElementById('fc-answer-row').classList.remove('hidden');
+    document.getElementById('fc-nav-row').classList.add('hidden');
+    document.getElementById('fc-hint').textContent = 'Did you get it right?';
+  } else {
+    document.getElementById('fc-answer-row').classList.add('hidden');
+    document.getElementById('fc-nav-row').classList.remove('hidden');
+    document.getElementById('fc-hint').textContent = 'Click to flip';
+  }
+}
+
+function fcAnswer(ok) {
+  if (ok) fcCorrect++; else { fcWrong++; wrongCards.push(deck[deckIdx]); }
+  deckIdx++;
+  renderFC();
+}
+
+function fcNext() { deckIdx = Math.min(deckIdx + 1, deck.length); renderFC(); }
+function fcPrev() { deckIdx = Math.max(deckIdx - 1, 0); renderFC(); }
+
+/* ===== TYPING ===== */
+function loadTyping(wrongOnly) {
+  const cat = VOCAB[activeCat];
+  document.getElementById('toolbar-title').textContent = cat.label;
+  const source = wrongOnly ? wrongCards : cat.cards;
+  deck = [...source];
+  deckIdx = 0; fcCorrect = 0; fcWrong = 0; wrongCards = [];
+  document.getElementById('wrong-btn').style.display = 'none';
+  document.getElementById('complete-view').classList.add('hidden');
+  document.getElementById('ty-view').classList.remove('hidden');
+  renderTyping();
+}
+
+function renderTyping() {
+  if (deckIdx >= deck.length) { showComplete('ty'); return; }
+  const c = deck[deckIdx];
+  tyAnswered = false;
+  document.getElementById('ty-prompt').textContent = c.nl;
+  document.getElementById('ty-sub').textContent = c.sub || '';
+  document.getElementById('ty-direction').textContent = 'Dutch → English';
+  const inp = document.getElementById('ty-input');
+  inp.value = '';
+  inp.className = 'type-input';
+  inp.disabled = false;
+  inp.placeholder = 'type your answer…';
+  inp.focus();
+  document.getElementById('ty-feedback').textContent = '';
+  document.getElementById('ty-feedback').className = 'type-feedback';
+  document.getElementById('ty-idx').textContent = deckIdx + 1;
+  document.getElementById('ty-total').textContent = deck.length;
+  document.getElementById('ty-correct').textContent = fcCorrect;
+  document.getElementById('ty-wrong').textContent = fcWrong;
+  document.getElementById('prog').style.width = Math.round(deckIdx / deck.length * 100) + '%';
+}
+
+function normalize(s) { return s.trim().toLowerCase().replace(/[^a-záàäéèëíìïóòöúùü\/\- ]/gi,''); }
+
+function checkTyping() {
+  if (tyAnswered) { deckIdx++; renderTyping(); return; }
+  const c = deck[deckIdx];
+  const inp = document.getElementById('ty-input');
+  const answers = c.en.split('/').map(a => normalize(a));
+  const given = normalize(inp.value);
+  const fb = document.getElementById('ty-feedback');
+  if (!given) return;
+
+  const ok = answers.some(a => given === a || given === a.trim());
+  tyAnswered = true;
+  if (ok) {
+    fcCorrect++;
+    inp.className = 'type-input correct-input';
+    fb.textContent = '✓ Correct!';
+    fb.className = 'type-feedback correct';
+  } else {
+    fcWrong++;
+    wrongCards.push(c);
+    inp.className = 'type-input wrong-input';
+    fb.textContent = '✗  Answer: ' + c.en;
+    fb.className = 'type-feedback wrong';
+  }
+  inp.disabled = true;
+  document.getElementById('ty-correct').textContent = fcCorrect;
+  document.getElementById('ty-wrong').textContent = fcWrong;
+}
+
+function revealTyping() {
+  const c = deck[deckIdx];
+  const inp = document.getElementById('ty-input');
+  inp.value = c.en;
+  inp.className = 'type-input revealed';
+  inp.disabled = true;
+  const fb = document.getElementById('ty-feedback');
+  fb.textContent = c.ex ? '"' + c.ex + '"' : '';
+  fb.className = 'type-feedback';
+  fcWrong++;
+  wrongCards.push(c);
+  document.getElementById('ty-wrong').textContent = fcWrong;
+  tyAnswered = true;
+}
+
+/* ===== CONJUGATION ===== */
+function loadConjugation() {
+  const verb = VERBS[activeVerb];
+  document.getElementById('toolbar-title').textContent = verb.infinitive;
+  cjDeck = Object.keys(VERBS);
+  cjIdx = cjDeck.indexOf(activeVerb);
+  cjCorrect = 0; cjWrong = 0;
+  document.getElementById('complete-view').classList.add('hidden');
+  document.getElementById('cj-view').classList.remove('hidden');
+  renderConj();
+}
+
+function renderConj() {
+  const key = cjDeck[cjIdx];
+  const verb = VERBS[key];
+  activeVerb = key;
+  document.getElementById('cj-verb').textContent = verb.infinitive;
+  document.getElementById('cj-meaning').textContent = verb.meaning;
+  document.getElementById('cj-idx').textContent = cjIdx + 1;
+  document.getElementById('cj-total').textContent = cjDeck.length;
+  document.getElementById('cj-correct').textContent = cjCorrect;
+  document.getElementById('cj-wrong').textContent = cjWrong;
+  document.getElementById('prog').style.width = Math.round(cjIdx / cjDeck.length * 100) + '%';
+
+  const grid = document.getElementById('cj-grid');
+  grid.innerHTML = '';
+  verb.forms.forEach((f, i) => {
+    const row = document.createElement('div');
+    row.className = 'conj-row';
+    row.innerHTML = `<span class="conj-pronoun">${f.pronoun}</span><input class="conj-input" data-idx="${i}" placeholder="…" autocomplete="off" spellcheck="false">`;
+    grid.appendChild(row);
+  });
+  grid.querySelectorAll('.conj-input')[0]?.focus();
+}
+
+function checkConj() {
+  const key = cjDeck[cjIdx];
+  const verb = VERBS[key];
+  const inputs = document.querySelectorAll('.conj-input');
+  let allOk = true;
+  inputs.forEach((inp, i) => {
+    const correct = verb.forms[i].form;
+    const given = inp.value.trim().toLowerCase();
+    if (given === correct) {
+      inp.className = 'conj-input correct';
     } else {
-      // Always use Supabase data — overwrite any local cache
-      contacts=data.map(fromDb);
+      inp.className = 'conj-input wrong';
+      allOk = false;
     }
-    cacheLocal(); // update cache with fresh data
-    setSyncStatus('saved');
-  }catch(err){
-    console.warn('Supabase load failed:',err.message);
-    // Only fall back to cache if Supabase completely unavailable
-    try{const d=localStorage.getItem('skoll_cfk');if(d)contacts=JSON.parse(d);}catch{}
-    setSyncStatus('offline');
-  }
-}
-
-async function syncOne(c){
-  cacheLocal();setSyncStatus('syncing');
-  try{
-    const{error}=await db.from('contacts').upsert(toDb(c));
-    if(error){
-      console.error('Sync error:',error);
-      setSyncStatus('offline');
-      toast('Save failed: '+error.message);
-      return;
-    }
-    setSyncStatus('saved');
-  }catch(err){
-    console.warn('Sync error:',err.message);
-    setSyncStatus('offline');
-    toast('Save failed: '+err.message);
-  }
-}
-
-async function deleteOne(id){
-  const backup=contacts.find(c=>c.id===id);
-  contacts=contacts.filter(c=>c.id!==id);cacheLocal();render();
-  try{
-    const{error}=await db.from('contacts').delete().eq('id',id);
-    if(error){
-      if(backup){contacts=[...contacts,backup];contacts.sort((a,b)=>a.created_at>b.created_at?1:-1);cacheLocal();render();}
-      toast('Delete failed: '+error.message);
-    }
-  }catch(e){
-    if(backup){contacts=[...contacts,backup];contacts.sort((a,b)=>a.created_at>b.created_at?1:-1);cacheLocal();render();}
-    toast('Delete failed — check connection');
-  }
-}
-
-function setSyncStatus(s){
-  const el=document.getElementById('sync-status');if(!el)return;
-  const m={syncing:{t:'Syncing...',c:'#92400e',d:'#f59e0b'},saved:{t:'Saved',c:'#065f46',d:'#10b981'},offline:{t:'Offline',c:'#991b1b',d:'#ef4444'}};
-  const v=m[s]||m.saved;
-  el.innerHTML=`<span style="width:6px;height:6px;border-radius:50%;background:${v.d};display:inline-block;"></span><span style="color:${v.c};">${v.t}</span>`;
-}
-
-// ── Demo data ─────────────────────────────────────────────────────────
-function mkT(arr){return arr.map((t,i)=>({id:'t'+Date.now()+i+Math.random(),text:t,done:false,deadline:''}));}
-function getSkollData(){
-  const n=new Date().toISOString(),src='Skoll World Forum';
-  return [
-    {id:'c1',name:'Jamaica Maxwell',title:'',org:'',email:'',phone:'',description:'Democratic resilience follow-up.',issues:['Democratic resilience'],tags:['Democratic resilience'],assignees:['Evan'],tasks:mkT(['Follow up']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c2',name:'Shaheen',title:'',org:'Hilton',email:'',phone:'',description:'Democratic resilience follow-up.',issues:['Democratic resilience'],tags:['Democratic resilience'],assignees:['Evan'],tasks:mkT(['Follow up with Shaheen']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c3',name:'Sanjay',title:'',org:'',email:'',phone:'',description:'KX follow-up - schedule planning call.',issues:['KX planning call'],tags:['KX follow-up'],assignees:['Evan'],tasks:mkT(['Schedule planning call']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c4',name:'Dani',title:'',org:'',email:'',phone:'',description:'KX follow-up - schedule planning call.',issues:['KX planning call'],tags:['KX follow-up'],assignees:['Evan'],tasks:mkT(['Schedule planning call']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c5',name:'Erin Worsham',title:'',org:'Duke',email:'',phone:'',description:'Reference how much Beryl enjoyed conversation with her.',issues:['KX partnership'],tags:['KX follow-up'],assignees:['Evan'],tasks:mkT(['Send follow-up referencing Beryl']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c6',name:'Robert White',title:'',org:'',email:'',phone:'',description:'Share Google concept note (AI). Meet with Myson. Follow up on PDC training.',issues:['Google concept note (AI)','PDC training','Myson strategy'],tags:['Economic resilience','AI Policy'],assignees:['Evan'],tasks:mkT(['Share Google concept note (AI)','Meet and strategize with Myson','Follow up on PDC training for grantees']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c7',name:'Legado Foundation',title:'',org:'Legado Fdn',email:'',phone:'',description:'Follow-up with Majka (ED) and Katie Bernard (Head of Impact).',issues:['Impact partnership'],tags:['Economic resilience'],assignees:['Evan'],tasks:mkT(['Email Majka (ED)','Connect with Katie Bernard']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c8',name:'Woven Foundation',title:'Veronica Ksiazek',org:'Woven Fdn',email:'',phone:'',description:'Funding democracy resilience and community development.',issues:['Democracy resilience funding','Community development'],tags:['Economic resilience','Democratic resilience'],assignees:['Evan'],tasks:mkT(['Follow up with Veronica Ksiazek']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c9',name:'Sybil',title:'',org:'Gates Foundation',email:'',phone:'',description:'Message on LinkedIn.',issues:['Gates Foundation relationship'],tags:['Economic resilience'],assignees:['Evan'],tasks:mkT(['Message Sybil on LinkedIn']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c10',name:'IDS Research Team',title:'',org:'IDS',email:'',phone:'',description:'Follow up with research team.',issues:['Research collaboration'],tags:['Economic resilience'],assignees:['Evan'],tasks:mkT(['Follow up with IDS research team']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c11',name:'Dedo',title:'',org:'Segal Family Foundation',email:'',phone:'',description:'Segal Family Fdn follow-up.',issues:['Foundation partnership'],tags:['Economic resilience'],assignees:['Evan'],tasks:mkT(['Follow up with Dedo']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c12',name:'Peter (CPTA)',title:'',org:'CPTA',email:'',phone:'',description:'Concept note to Peter.',issues:['Concept note delivery','CPTA partnership'],tags:['Democratic resilience'],assignees:['Evan','Beryl'],tasks:mkT(['Finalize and send concept note to Peter']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c13',name:'TCC Contract Strategy',title:'',org:'',email:'',phone:'',description:'Develop strategy for next TCC contract.',issues:['TCC contract renewal'],tags:['Democratic resilience'],assignees:['Evan','Beryl'],tasks:mkT(['Develop strategy for next TCC contract']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c14',name:'Key Contacts - Webinar',title:'',org:'',email:'',phone:'',description:'Invite key contacts to webinar.',issues:['Webinar outreach'],tags:['Democratic resilience'],assignees:['Evan','Beryl','Aaron'],tasks:mkT(['Identify invitees','Send invitations']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c15',name:'LinkedIn Collateral',title:'',org:'',email:'',phone:'',description:'LinkedIn collateral for Skoll comms.',issues:['Post-Skoll comms'],tags:['Comms & branding'],assignees:['Evan','Beryl','Aaron'],tasks:mkT(['Draft LinkedIn collateral','Publish posts']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c16',name:'MacKinsie',title:'',org:'',email:'',phone:'',description:'Democratic resilience / CPTA follow-up.',issues:['CPTA partnership'],tags:['Democratic resilience'],assignees:['Beryl'],tasks:mkT(['Follow up with MacKinsie']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c17',name:'Vladimir',title:'',org:'',email:'',phone:'',description:'Democratic resilience / CPTA follow-up.',issues:['CPTA partnership'],tags:['Democratic resilience'],assignees:['Beryl'],tasks:mkT(['Follow up with Vladimir']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c18',name:'Matt Glazer',title:'',org:'',email:'',phone:'',description:'Democratic resilience / CPTA follow-up.',issues:['CPTA partnership'],tags:['Democratic resilience'],assignees:['Beryl'],tasks:mkT(['Follow up with Matt Glazer']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c19',name:'Celina (CPTA)',title:'',org:'',email:'',phone:'',description:'Democratic resilience / CPTA follow-up.',issues:['CPTA partnership'],tags:['Democratic resilience'],assignees:['Beryl'],tasks:mkT(['Follow up with Celina']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c20',name:'Rebecca Finlay',title:'',org:'Partnership for AI',email:'',phone:'',description:'Based in Toronto, travels to SF. KX follow-up re Partnership for AI.',issues:['Partnership for AI','KX collaboration'],tags:['KX follow-up','AI Policy'],assignees:['Beryl'],tasks:mkT(['Schedule intro call with Rebecca']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c21',name:'BWS Follow-up',title:'',org:'',email:'',phone:'',description:'Jennifer Cho (Panarama Global); Ruba and Lucy (Democracy Next).',issues:['BWS follow-up','Democracy Next'],tags:['Democratic resilience'],assignees:['Aaron'],tasks:mkT(['Follow up with Jennifer Cho','Follow up with Ruba and Lucy']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c22',name:'RAD Network Strategy',title:'',org:'',email:'',phone:'',description:'Develop RAD Network strategy.',issues:['RAD Network strategy'],tags:['Democratic resilience'],assignees:['Aaron'],tasks:mkT(['Develop RAD Network strategy']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c23',name:'Sidebar Session',title:'',org:'',email:'',phone:'',description:'Sidebar session follow-up from Skoll.',issues:['Skoll sidebar'],tags:['Democratic resilience'],assignees:['Aaron'],tasks:mkT(['Follow up on sidebar session']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c24',name:'Jonny Subash',title:'',org:'',email:'',phone:'',description:'Schedule demo. Share note sent to Sanjay.',issues:['KX demo','Sanjay note'],tags:['KX follow-up'],assignees:['Aaron'],tasks:mkT(['Schedule demo','Share note sent to Sanjay']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c25',name:'Guide to Good',title:'Courtney & Adam',org:'Guide to Good',email:'',phone:'',description:'Request demo.',issues:['KX demo request'],tags:['KX follow-up'],assignees:['Aaron'],tasks:mkT(['Request demo from Courtney and Adam']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c26',name:'Tarek',title:'',org:'',email:'',phone:'',description:'Explore digital passport concept.',issues:['Digital passport concept'],tags:['KX follow-up','Technology'],assignees:['Aaron'],tasks:mkT(['Explore digital passport concept']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c27',name:'Lindsay',title:'',org:'Gates Foundation',email:'',phone:'',description:'Share concept note. Get donor names from Gates.',issues:['Concept note','Gates donor network'],tags:['KX follow-up'],assignees:['Aaron'],tasks:mkT(['Share concept note','Get donor names from Gates']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c28',name:'Social Media Posts',title:'',org:'',email:'',phone:'',description:'Social media posts re Skoll.',issues:['Skoll social media'],tags:['Comms & branding'],assignees:['Aaron'],tasks:mkT(['Draft and publish social media posts']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c29',name:'Tara Wondraczek',title:'ED',org:'Family Foundation',email:'',phone:'',description:'Small family foundation. West Africa community economic development. Also supports Tostan.',issues:['West Africa development','Tostan relationship'],tags:['Economic resilience'],assignees:['Aaron'],tasks:mkT(['Send follow-up to Tara Wondraczek']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c30',name:'Aroa Alvarez',title:'',org:'',email:'',phone:'',description:'Intro to Possibility Lab. Follow-up on Nest offerings. Explore as back-end sponsor.',issues:['Possibility Lab intro','Nest fiscal sponsorship'],tags:['Fiscal sponsorship'],assignees:[],tasks:mkT(['Intro to Possibility Lab','Follow up on Nest offerings']),emailDraft:'',source:src,status:'todo',createdAt:n},
-    {id:'c31',name:'Celina (Nasdaq)',title:'',org:'Nasdaq',email:'',phone:'',description:'PDAT - People Doing Amazing Things (10 possibilities good to go).',issues:['PDAT partnership'],tags:['Fiscal sponsorship'],assignees:[],tasks:mkT(['Follow up on PDAT']),emailDraft:'',source:src,status:'todo',createdAt:n},
-  ];
-}
-
-// ── AI ────────────────────────────────────────────────────────────────
-async function callAI(sys,usr){
-  const key=getKey();
-  if(!key)throw new Error('No API key - click the key pill in the top bar');
-  let lastErr='';
-  for(const model of AI_MODELS){
-    try{
-      const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
-        headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-        body:JSON.stringify({model,max_tokens:1024,system:sys,messages:[{role:'user',content:usr}]})});
-      let data;try{data=await r.json();}catch{lastErr=`Status ${r.status}`;continue;}
-      if(r.status===404){lastErr=`Model ${model} not available`;continue;}
-      if(!r.ok){lastErr=data?.error?.message||`Error ${r.status}`;continue;}
-      return data.content[0].text;
-    }catch(e){lastErr=e.message;}
-  }
-  throw new Error(lastErr||'AI call failed');
-}
-
-// ── Render board ──────────────────────────────────────────────────────
-function render(){
-  const q=(document.getElementById('search').value||'').toLowerCase();
-  renderBoardTabs();
-  COLS.forEach(col=>{
-    const el=document.getElementById('cards-'+col);
-    const items=contacts.filter(c=>{
-      if(c.status!==col)return false;
-      if(currentBoard&&c.source!==currentBoard)return false; // board filter
-      if(activeTag&&!(c.tags||[]).includes(activeTag))return false;
-      if(q&&![c.name,c.org,c.source].some(v=>(v||'').toLowerCase().includes(q)))return false;
-      return true;
-    });
-    if(!el)return;
-    el.innerHTML='';
-    items.forEach(c=>el.appendChild(buildCard(c)));
-    const cnt=document.getElementById('cnt-'+col);
-    if(cnt)cnt.textContent=items.length;
   });
-  renderTagBar();
-  const tot=contacts.length,pen=contacts.reduce((n,c)=>n+(c.tasks||[]).filter(t=>!t.done).length,0);
-  document.getElementById('sbar').textContent=`${tot} contact${tot!==1?'s':''} - ${pen} pending task${pen!==1?'s':''}`;
+  if (allOk) cjCorrect++; else cjWrong++;
+  document.getElementById('cj-correct').textContent = cjCorrect;
+  document.getElementById('cj-wrong').textContent = cjWrong;
 }
 
-function buildCard(c){
-  const[bg,fg]=avC(c.name);
-  const tasks=c.tasks||[];
-  const done=tasks.filter(t=>t.done).length;
-  const pct=tasks.length?Math.round(done/tasks.length*100):0;
-  const assignees=(c.assignees||[]).slice(0,3);
+function revealConj() {
+  const key = cjDeck[cjIdx];
+  const verb = VERBS[key];
+  document.querySelectorAll('.conj-input').forEach((inp, i) => {
+    inp.value = verb.forms[i].form;
+    inp.className = 'conj-input revealed';
+    inp.disabled = true;
+  });
+}
 
-  const card=document.createElement('div');
-  card.className='card';
-  card.dataset.id=c.id;
-
-  // Avatar
-  const av=document.createElement('div');
-  av.className='av';
-  Object.assign(av.style,{width:'32px',height:'32px',background:bg,color:fg,flexShrink:'0'});
-  av.textContent=ini(c.name);
-
-  // Meta
-  const meta=document.createElement('div');
-  meta.className='card-meta';
-  meta.innerHTML=`<div class="card-name">${esc(c.name)}</div><div class="card-sub">${esc([c.title,c.org].filter(Boolean).join(' - '))||'<span style="color:var(--text3)">-</span>'}</div>`;
-
-  // Top row
-  const top=document.createElement('div');
-  top.className='card-top';
-  top.appendChild(av);top.appendChild(meta);
-  card.appendChild(top);
-
-  // Tags
-  if((c.tags||[]).length){
-    const tagsDiv=document.createElement('div');tagsDiv.className='card-tags';
-    c.tags.slice(0,3).forEach(t=>{
-      const tc=tpC(t);const span=document.createElement('span');span.className='tag';
-      span.style.background=tc.bg;span.style.color=tc.fg;span.textContent=t;tagsDiv.appendChild(span);
-    });
-    if(c.tags.length>3){const s=document.createElement('span');s.style.cssText='font-size:10px;color:var(--text3);';s.textContent=`+${c.tags.length-3}`;tagsDiv.appendChild(s);}
-    card.appendChild(tagsDiv);
-  }
-
-  // Footer
-  const footer=document.createElement('div');footer.className='card-footer';
-  const adots=document.createElement('div');adots.className='assignee-dots';
-  if(assignees.length){
-    assignees.forEach(a=>{const pc=PCOL[a]||{bg:'#ddd',fg:'#555'};const d=document.createElement('div');d.className='assignee-dot';d.style.background=pc.bg;d.style.color=pc.fg;d.textContent=(a||'')[0];adots.appendChild(d);});
+function nextConj() {
+  cjIdx++;
+  if (cjIdx >= cjDeck.length) {
+    showComplete('cj');
   } else {
-    const s=document.createElement('span');s.style.cssText='font-size:10px;color:var(--text3);';s.textContent='Unassigned';adots.appendChild(s);
-  }
-  footer.appendChild(adots);
-  const taskInfo=document.createElement('span');
-  if(tasks.length){
-    taskInfo.innerHTML=`${done}/${tasks.length} <span class="prog-bar"><span class="prog-fill" style="width:${pct}%"></span></span>`;
-  } else {
-    taskInfo.style.color='var(--text3)';taskInfo.style.fontSize='11px';taskInfo.textContent='No tasks';
-  }
-  footer.appendChild(taskInfo);
-  if(c.source){const s=document.createElement('span');s.style.cssText='font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--col);color:var(--text3);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';s.textContent=c.source;footer.appendChild(s);}
-  card.appendChild(footer);
-
-  // ── Events ──
-  card.addEventListener('pointerdown',e=>{
-    if(e.button!==0)return;
-    // Clear any stuck drag state first
-    if(dragState){
-      if(dragState.ghost)dragState.ghost.remove();
-      const prev=document.querySelector(`.card[data-id="${dragState.id}"]`);
-      if(prev)prev.style.opacity='';
-      document.querySelectorAll('.col-scroll').forEach(el=>el.style.overflowY='');
-      dragState=null;
-    }
-    try{card.setPointerCapture(e.pointerId);}catch{}
-    const rect=card.getBoundingClientRect();
-    const ghost=card.cloneNode(true);
-    ghost.style.cssText=`position:fixed;z-index:9999;width:${rect.width}px;opacity:.88;pointer-events:none;display:none;box-shadow:0 12px 32px rgba(0,0,0,.2);transform:rotate(2deg);transition:none;left:${rect.left}px;top:${rect.top}px;border-radius:10px;`;
-    document.body.appendChild(ghost);
-    dragState={id:c.id,ghost,card,startX:e.clientX,startY:e.clientY,offX:e.clientX-rect.left,offY:e.clientY-rect.top,moved:false};
-    e.preventDefault();
-  });
-
-  card.addEventListener('pointermove',e=>{
-    if(!dragState||dragState.id!==c.id)return;
-    const dx=e.clientX-dragState.startX,dy=e.clientY-dragState.startY;
-    if(!dragState.moved&&Math.sqrt(dx*dx+dy*dy)<5)return;
-    if(!dragState.moved){
-      dragState.moved=true;
-      dragState.ghost.style.display='block';
-      document.querySelectorAll('.col-scroll').forEach(el=>el.style.overflowY='hidden');
-      card.style.opacity='.3';
-    }
-    dragState.ghost.style.left=(e.clientX-dragState.offX)+'px';
-    dragState.ghost.style.top=(e.clientY-dragState.offY)+'px';
-    document.querySelectorAll('.col').forEach(col=>{
-      const r=col.getBoundingClientRect();
-      col.classList.toggle('drag-over',e.clientX>=r.left&&e.clientX<=r.right);
-    });
-  });
-
-  card.addEventListener('pointerup',e=>{
-    if(!dragState||dragState.id!==c.id)return;
-    const wasMoved=dragState.moved;
-    endDrag(e);
-    if(!wasMoved)openPanel(c.id);
-    e.stopPropagation();
-  });
-
-  card.addEventListener('pointercancel',()=>{
-    if(!dragState||dragState.id!==c.id)return;
-    if(dragState.ghost)dragState.ghost.remove();
-    card.style.opacity='';
-    document.querySelectorAll('.col-scroll').forEach(el=>el.style.overflowY='');
-    document.querySelectorAll('.col').forEach(col=>col.classList.remove('drag-over'));
-    dragState=null;
-  });
-
-  return card;
-}
-
-function renderTagBar(){
-  const boardContacts=currentBoard?contacts.filter(c=>c.source===currentBoard):contacts;
-  const allTags=[...new Set(boardContacts.flatMap(c=>c.tags||[]))].sort();
-  const bar=document.getElementById('tag-bar');
-  if(!bar)return;
-  bar.innerHTML='';
-  const allBtn=document.createElement('button');allBtn.className='tf'+(activeTag===''?' active':'');allBtn.textContent='All';
-  allBtn.onclick=()=>{activeTag='';render();};bar.appendChild(allBtn);
-  allTags.forEach(t=>{
-    const btn=document.createElement('button');btn.className='tf'+(activeTag===t?' active':'');btn.textContent=t;
-    btn.onclick=()=>{activeTag=activeTag===t?'':t;render();};bar.appendChild(btn);
-  });
-}
-
-// ── Debug ─────────────────────────────────────────────────────────────
-let debugOn=false;
-function toggleDebug(){debugOn=!debugOn;document.getElementById('debug-panel').style.display=debugOn?'':'none';}
-function dbg(msg){if(!debugOn)return;const el=document.getElementById('debug-log');if(el){const line=document.createElement('div');line.textContent=new Date().toISOString().slice(11,23)+' '+msg;el.appendChild(line);el.scrollTop=el.scrollHeight;}console.log('[drag]',msg);}
-
-
-let dragState=null;
-
-function setupDragDrop(){} // no-op, drag is handled per-card via pointer events
-
-// Escape key cancels any stuck drag
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'&&dragState){
-    if(dragState.ghost)dragState.ghost.remove();
-    document.querySelectorAll('.col-scroll').forEach(el=>el.style.overflowY='');
-    document.querySelectorAll('.col').forEach(col=>col.classList.remove('drag-over'));
-    const orig=document.querySelector(`.card[data-id="${dragState.id}"]`);
-    if(orig)orig.style.opacity='';
-    dragState=null;
-  }
-});
-
-function endDrag(e){
-  if(!dragState)return;
-  const state=dragState;
-  dragState=null;
-
-  if(state.ghost)state.ghost.remove();
-  document.querySelectorAll('.col-scroll').forEach(el=>el.style.overflowY='');
-  document.querySelectorAll('.col').forEach(col=>col.classList.remove('drag-over'));
-  const orig=document.querySelector(`.card[data-id="${state.id}"]`);
-  if(orig)orig.style.opacity='';
-
-  if(!state.moved){dbg('endDrag: not moved, skip');return;}
-
-  dbg('endDrag: cursor='+Math.round(e.clientX)+','+Math.round(e.clientY));
-
-  // Detect target column by X position only — columns are horizontal lanes
-  // so vertical position doesn't matter (short columns still accept drops)
-  let targetCol=null;
-  document.querySelectorAll('.col').forEach(col=>{
-    const r=col.getBoundingClientRect();
-    dbg('col '+col.dataset.col+' x='+Math.round(r.left)+'-'+Math.round(r.right));
-    if(e.clientX>=r.left&&e.clientX<=r.right){targetCol=col;dbg('HIT: '+col.dataset.col);}
-  });
-  if(!targetCol){dbg('NO TARGET COL — outside board');return;}
-
-  const newStatus=targetCol.dataset.col;
-  const c=contacts.find(x=>x.id===state.id);
-  dbg('contact found:'+(!!c)+' currentStatus:'+(c?.status)+' newStatus:'+newStatus);
-  if(c&&c.status!==newStatus){
-    c.status=newStatus;syncOne(c);render();
-    if(currentId===state.id)document.getElementById('pstatus').value=newStatus;
-    toast('Moved to '+targetCol.querySelector('.col-title').textContent);
-    dbg('MOVED OK');
-  } else {
-    dbg('same col or contact not found');
+    renderConj();
+    buildSidebar();
   }
 }
 
+/* ===== COMPLETE ===== */
+function showComplete(src) {
+  const total = src === 'cj' ? cjDeck.length : deck.length;
+  const corr = src === 'cj' ? cjCorrect : fcCorrect;
+  const wrng = src === 'cj' ? cjWrong : fcWrong;
+  document.getElementById('fc-view').classList.add('hidden');
+  document.getElementById('ty-view').classList.add('hidden');
+  document.getElementById('cj-view').classList.add('hidden');
+  document.getElementById('complete-view').classList.remove('hidden');
+  document.getElementById('prog').style.width = '100%';
 
-// ── Panel ─────────────────────────────────────────────────────────────
-function openPanel(id){
-  currentId=id;const c=contacts.find(x=>x.id===id);if(!c)return;
-  renderPanelHdr(c);
-  document.querySelectorAll('.ptab').forEach((b,i)=>b.classList.toggle('active',i===0));
-  currentTab='overview';
-  renderPanelBody();
-  document.getElementById('backdrop').classList.add('open');
-  document.getElementById('panel').classList.add('open');
-}
-function closePanel(){
-  // Save any unsaved field values before closing
-  if(currentId){
-    const updates={};
-    document.querySelectorAll('[data-f]').forEach(inp=>{
-      updates[inp.dataset.f]=inp.value;
-    });
-    if(Object.keys(updates).length)updC(updates);
-  }
-  document.getElementById('backdrop').classList.remove('open');
-  document.getElementById('panel').classList.remove('open');
-  currentId=null;
-}
-function getC(){return contacts.find(x=>x.id===currentId);}
-function updC(ch){
-  const i=contacts.findIndex(x=>x.id===currentId);if(i<0){toast('Save error: no contact');return;}
-  Object.assign(contacts[i],ch);
-  syncOne(contacts[i]);
-  if(ch.status)document.getElementById('pstatus').value=ch.status;
-  if(ch.name||ch.title||ch.org)renderPanelHdr(contacts[i]);
-  // Delay render so it doesn't interrupt active input fields
-  clearTimeout(updC._timer);
-  updC._timer=setTimeout(()=>render(),300);
-}
-function renderPanelHdr(c){
-  const[bg,fg]=avC(c.name);
-  const av=document.getElementById('pav');av.style.background=bg;av.style.color=fg;av.textContent=ini(c.name);
-  document.getElementById('pname').textContent=c.name||'Unnamed';
-  document.getElementById('psub').textContent=[c.title,c.org].filter(Boolean).join(' - ')||'';
-  document.getElementById('pstatus').value=c.status||'todo';
-}
-function switchPTab(tab,btn){
-  document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');currentTab=tab;renderPanelBody();
-}
-function renderPanelBody(){
-  const c=getC();if(!c)return;
-  const body=document.getElementById('pbody');
-  if(currentTab==='overview')body.innerHTML=tmplOverview(c);
-  else if(currentTab==='issues')body.innerHTML=tmplIssues(c);
-  else if(currentTab==='tasks')body.innerHTML=tmplTasks(c);
-  else if(currentTab==='email')body.innerHTML=tmplEmail(c);
-  bindPanel();
+  const pct = total > 0 ? Math.round(corr / total * 100) : 0;
+  document.getElementById('complete-msg').textContent = `${corr} correct out of ${total} — ${pct}%`;
+  const pill = document.getElementById('complete-pill');
+  pill.textContent = pct >= 90 ? '🌟 Uitstekend!' : pct >= 70 ? '👍 Goed gedaan!' : pct >= 50 ? '💪 Ga door!' : '📚 Blijf oefenen!';
+  pill.style.background = pct >= 70 ? 'var(--green-light)' : 'var(--accent-light)';
+  pill.style.color = pct >= 70 ? 'var(--green)' : 'var(--accent)';
+
+  const retryBtn = document.getElementById('retry-wrong-btn');
+  retryBtn.style.display = (src !== 'cj' && wrongCards.length > 0) ? '' : 'none';
+  document.getElementById('wrong-btn').style.display = (src !== 'cj' && wrongCards.length > 0) ? '' : 'none';
 }
 
-// ── Panel templates ───────────────────────────────────────────────────
-function tmplOverview(c){
-  return`<div class="psec"><div class="g2" style="margin-bottom:10px;">
-    <div><label class="fl">Name</label><input data-f="name" type="text" value="${esc(c.name||'')}"></div>
-    <div><label class="fl">Title</label><input data-f="title" type="text" value="${esc(c.title||'')}"></div>
-    <div><label class="fl">Organization</label><input data-f="org" type="text" value="${esc(c.org||'')}"></div>
-    <div><label class="fl">Email</label><input data-f="email" type="email" value="${esc(c.email||'')}"></div>
-    <div><label class="fl">Phone</label><input data-f="phone" type="text" value="${esc(c.phone||'')}"></div>
-    <div><label class="fl">Event / Conference</label><input data-f="source" type="text" value="${esc(c.source||'')}"></div>
-  </div></div>
-  <div class="psec">
-    <div class="row" style="justify-content:space-between;margin-bottom:6px;">
-      <label class="fl" style="margin:0;">Meeting notes</label>
-      <div style="display:flex;gap:5px;">
-        <button id="extract-btn" style="font-size:11px;padding:4px 10px;color:#7c3aed;border-color:#c4b5fd;background:#f5f3ff;" title="Extract details from notes into form fields">Extract to fields ✦</button>
-        <button id="enrich-btn" style="font-size:11px;padding:4px 10px;color:var(--teal);border-color:var(--teal);background:var(--teal-bg);">AI Enrich ✦</button>
-      </div>
-    </div>
-    <textarea data-f="description" id="desc-field" rows="5">${esc(c.description||'')}</textarea>
-    <div id="enrich-loading" style="display:none;font-size:12px;color:var(--text3);margin-top:6px;text-align:center;">Enriching notes...</div>
-    <div id="extract-loading" style="display:none;font-size:12px;color:#7c3aed;margin-top:6px;text-align:center;">Extracting fields...</div>
-    <div id="extract-result" style="display:none;font-size:12px;margin-top:6px;padding:8px 10px;border-radius:8px;background:#f5f3ff;border:1px solid #c4b5fd;color:#5b21b6;"></div>
-  </div>
-  <div class="psec">
-    <label class="fl" style="margin-bottom:6px;">LinkedIn</label>
-    ${c.linkedin
-      ? '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><a href="'+esc(c.linkedin)+'" target="_blank" rel="noopener" style="font-size:13px;color:#0077b5;text-decoration:none;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+esc(c.linkedin)+'</a><button id="linkedin-clear-btn" style="font-size:11px;padding:2px 8px;color:#b00;border-color:#fca5a5;background:#fee2e2;flex-shrink:0;">Clear</button></div>'
-      : ''
-    }
-    <div style="display:flex;gap:6px;">
-      <input type="text" id="linkedin-input" placeholder="Paste LinkedIn URL here..." style="flex:1;font-size:12px;" value="${esc(c.linkedin||'')}">
-      <button id="linkedin-save-btn" style="font-size:11px;padding:4px 10px;color:var(--teal);border-color:var(--teal);background:var(--teal-bg);">Save</button>
-      <button id="linkedin-search-btn" style="font-size:11px;padding:4px 10px;color:#0077b5;border-color:#b3d4e8;background:#e8f4fb;" title="Search Google for this person on LinkedIn">Search ↗</button>
-    </div>
-  </div>
-  <div class="psec"><label class="fl">Quick add task</label>
-    <div class="row"><input type="text" id="quick-task" placeholder="Add a task..." style="flex:1;"><button id="quick-task-btn">Add</button></div>
-  </div>
-  <div class="psec" style="border-top:none;padding-top:0;">
-    <button id="del-contact-btn" style="width:100%;justify-content:center;color:#b00;border-color:#fca5a5;background:#fee2e2;font-size:12px;">Delete contact</button>
-  </div>`;
-}
-
-function tmplIssues(c){
-  const ic=(c.issues||[]).map(i=>`<span class="chip">${esc(i)}<button class="chip-x" data-ri="${esc(i)}">x</button></span>`).join('');
-  const tc=(c.tags||[]).map(t=>{const p=tpC(t);return`<span class="tag" style="background:${p.bg};color:${p.fg};gap:4px;">${esc(t)}<button class="chip-x" data-rt="${esc(t)}" style="color:${p.fg};">x</button></span>`;}).join('');
-  return`<div class="psec"><label class="fl">Key issues discussed</label>
-    <div class="chips-row" style="margin-bottom:8px;">${ic||'<span style="font-size:12px;color:var(--text3);">None yet</span>'}</div>
-    <div class="row"><input type="text" id="new-issue" placeholder="Add issue..." style="flex:1;"><button id="add-issue-btn">Add</button></div>
-  </div>
-  <div class="psec"><label class="fl">Thematic priorities</label>
-    <div class="chips-row" style="margin-bottom:8px;">${tc||'<span style="font-size:12px;color:var(--text3);">None yet</span>'}</div>
-    <div class="row"><input type="text" id="new-tag" placeholder="Add tag..." style="flex:1;"><button id="add-tag-btn">Add</button></div>
-  </div>`;
-}
-
-function tmplTasks(c){
-  const tasks=c.tasks||[];
-  const pen=tasks.filter(t=>!t.done).length;
-  document.getElementById('ptab-tasks').textContent='Tasks ('+pen+')';
-  const rows=tasks.map(t=>`<div class="task-row">
-    <input type="checkbox" class="tcheck" data-tid="${t.id}" ${t.done?'checked':''}>
-    <div style="flex:1;min-width:0;"><div style="font-size:13px;text-decoration:${t.done?'line-through':'none'};opacity:${t.done?.5:1};">${esc(t.text)}</div>
-    ${t.deadline?`<div style="font-size:11px;color:var(--text3);margin-top:2px;">Due ${t.deadline}</div>`:''}</div>
-    <button class="icon-btn" data-dt="${t.id}">x</button>
-  </div>`).join('');
-  return`<div class="psec">${!tasks.length?'<div style="text-align:center;padding:24px 0;color:var(--text3);font-size:13px;">No tasks yet</div>':'<div>'+rows+'</div>'}</div>
-  <div class="psec"><label class="fl">Add task</label>
-    <div class="row" style="flex-wrap:wrap;gap:8px;">
-      <input type="text" id="new-task" placeholder="Task description..." style="flex:1;min-width:140px;">
-      <input type="date" id="new-date" style="width:145px;flex-shrink:0;">
-      <button id="add-task-btn">Add</button>
-    </div>
-  </div>`;
-}
-
-function tmplEmail(c){
-  const has=!!c.emailDraft;
-  const sel=scenarioMap[c.id]||'nicetomeet';
-  const opts=[
-    {id:'nicetomeet',label:'Nice to Meet You',desc:'First-touch, light and warm'},
-    {id:'substantive',label:'Substantive Follow-Up',desc:'Deeper convo, sharing a resource'},
-    {id:'continuing',label:'Continuing the Conversation',desc:'Already been back-and-forth'},
-  ];
-  const radioHtml=opts.map(o=>`<div class="scenario-opt${sel===o.id?' sel':''}" id="sopt-${o.id}" data-scenario="${o.id}">
-    <div>
-      <div style="font-size:13px;font-weight:600;color:var(--text);">${o.label}</div>
-      <div style="font-size:11px;color:var(--text2);margin-top:1px;">${o.desc}</div>
-    </div>
-  </div>`).join('');
-  return`<div class="psec">
-    <label class="fl">Email type</label>
-    <div style="margin-bottom:14px;">${radioHtml}</div>
-    <div class="row" style="justify-content:space-between;margin-bottom:12px;">
-      <label class="fl" style="margin:0;">Draft</label>
-      <button class="primary" id="gen-btn" style="font-size:12px;padding:6px 12px;">${has?'Regenerate':'Generate with AI'}</button>
-    </div>
-    ${!has?`<div style="background:var(--col);border-radius:8px;padding:12px 14px;border:1px solid var(--border);font-size:13px;color:var(--text2);">Select an email type above, then generate a draft for <strong>${esc((c.name||'').split(' ')[0])}</strong>.</div>`:''}
-    <div id="email-loading" style="display:none;text-align:center;padding:24px;"><div class="spinner"></div><div style="font-size:13px;color:var(--text2);">Writing...</div></div>
-    ${has?`${c.email?`<div style="font-size:11px;color:var(--text3);margin-bottom:5px;font-family:monospace;">To: ${esc(c.email)}</div>`:''}
-    <textarea id="email-text" rows="9" style="font-size:13px;line-height:1.7;">${esc(c.emailDraft)}</textarea>
-    <div style="margin-top:8px;display:flex;gap:8px;">
-      <button id="copy-email-btn" style="font-size:12px;">Copy</button>
-      ${c.email?`<a href="mailto:${esc(c.email)}?body=${encodeURIComponent(c.emailDraft)}" style="font-size:12px;padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);text-decoration:none;display:inline-flex;align-items:center;">Open in mail</a>`:''}
-    </div>`:''}
-  </div>`;
-}
-
-// ── Panel bind ────────────────────────────────────────────────────────
-function bindPanel(){
-  // Save fields on blur AND input for textarea
-  document.querySelectorAll('[data-f]').forEach(inp=>{
-    inp.addEventListener('blur',()=>{updC({[inp.dataset.f]:inp.value});});
-    // Also save textarea on input with debounce so every keystroke eventually saves
-    if(inp.tagName==='TEXTAREA'){
-      let timer;
-      inp.addEventListener('input',()=>{
-        clearTimeout(timer);
-        timer=setTimeout(()=>updC({[inp.dataset.f]:inp.value}),800);
-      });
-    }
-  });
-  // LinkedIn buttons
-  const linkedinSaveBtn=document.getElementById('linkedin-save-btn');
-  if(linkedinSaveBtn)linkedinSaveBtn.onclick=saveLinkedIn;
-  const linkedinSearchBtn=document.getElementById('linkedin-search-btn');
-  if(linkedinSearchBtn)linkedinSearchBtn.onclick=searchLinkedIn;
-  const linkedinClearBtn=document.getElementById('linkedin-clear-btn');
-  if(linkedinClearBtn)linkedinClearBtn.onclick=()=>{updC({linkedin:''});renderPanelBody();toast('LinkedIn URL cleared');};
-  // Enrich notes button
-  const enrichBtn=document.getElementById('enrich-btn');
-  if(enrichBtn)enrichBtn.onclick=enrichNotes;
-  // Extract to fields button
-  const extractBtn=document.getElementById('extract-btn');
-  if(extractBtn)extractBtn.onclick=extractToFields;
-  // Issues/tags remove
-  document.querySelectorAll('[data-ri]').forEach(b=>{
-    b.onclick=()=>{const c=getC();c.issues=(c.issues||[]).filter(i=>i!==b.dataset.ri);updC({issues:c.issues});renderPanelBody();};
-  });
-  document.querySelectorAll('[data-rt]').forEach(b=>{
-    b.onclick=()=>{const c=getC();c.tags=(c.tags||[]).filter(t=>t!==b.dataset.rt);updC({tags:c.tags});renderPanelBody();};
-  });
-  // Tasks
-  document.querySelectorAll('[data-tid]').forEach(cb=>{
-    cb.onchange=()=>{const c=getC();c.tasks=c.tasks.map(t=>t.id===cb.dataset.tid?{...t,done:cb.checked}:t);updC({tasks:c.tasks});renderPanelBody();};
-  });
-  document.querySelectorAll('[data-dt]').forEach(b=>{
-    b.onclick=()=>{const c=getC();c.tasks=(c.tasks||[]).filter(t=>t.id!==b.dataset.dt);updC({tasks:c.tasks});renderPanelBody();};
-  });
-  // Email
-  const et=document.getElementById('email-text');if(et)et.oninput=()=>updC({emailDraft:et.value});
-  const genBtn=document.getElementById('gen-btn');if(genBtn)genBtn.onclick=genEmail;
-  const copyBtn=document.getElementById('copy-email-btn');if(copyBtn)copyBtn.onclick=copyEmail;
-  // Quick task / add task
-  const addTaskBtn=document.getElementById('add-task-btn');if(addTaskBtn)addTaskBtn.onclick=addTask;
-  const quickTaskBtn=document.getElementById('quick-task-btn');if(quickTaskBtn)quickTaskBtn.onclick=quickTask;
-  // Delete
-  const delBtn=document.getElementById('del-contact-btn');if(delBtn)delBtn.onclick=delContact;
-  // Issues/tags add buttons
-  const addIssueBtn=document.getElementById('add-issue-btn');if(addIssueBtn)addIssueBtn.onclick=addIssue;
-  const addTagBtn=document.getElementById('add-tag-btn');if(addTagBtn)addTagBtn.onclick=addTag2;
-  // Scenario opts
-  document.querySelectorAll('.scenario-opt').forEach(el=>{
-    el.onclick=()=>pickScenario(el.dataset.scenario);
-  });
-  // Enter key shortcuts
-  ['new-issue','new-tag','new-task','quick-task'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(!el)return;
-    el.onkeydown=e=>{if(e.key==='Enter'){
-      if(id==='new-issue')addIssue();
-      else if(id==='new-tag')addTag2();
-      else if(id==='new-task')addTask();
-      else if(id==='quick-task')quickTask();
-    }};
-  });
-}
-
-function addIssue(){const inp=document.getElementById('new-issue');const v=inp?.value.trim();if(!v)return;const c=getC();if(!(c.issues||[]).includes(v)){c.issues=[...(c.issues||[]),v];updC({issues:c.issues});}inp.value='';renderPanelBody();}
-function addTag2(){const inp=document.getElementById('new-tag');const v=inp?.value.trim();if(!v)return;const c=getC();if(!(c.tags||[]).includes(v)){c.tags=[...(c.tags||[]),v];updC({tags:c.tags});}inp.value='';renderPanelBody();}
-function addTask(){const t=document.getElementById('new-task')?.value.trim();if(!t)return;const c=getC();c.tasks=[...(c.tasks||[]),{id:'t'+Date.now(),text:t,deadline:document.getElementById('new-date')?.value||'',done:false}];updC({tasks:c.tasks});renderPanelBody();}
-function quickTask(){const inp=document.getElementById('quick-task');const v=inp?.value.trim();if(!v)return;const c=getC();c.tasks=[...(c.tasks||[]),{id:'t'+Date.now(),text:v,deadline:'',done:false}];updC({tasks:c.tasks});inp.value='';renderPanelBody();}
-function delContact(){if(!confirm('Delete this contact?'))return;const id=currentId;closePanel();deleteOne(id);toast('Deleted');}
-
-function pickScenario(s){
-  if(!currentId)return;
-  scenarioMap[currentId]=s;
-  document.querySelectorAll('.scenario-opt').forEach(el=>el.classList.remove('sel'));
-  const el=document.getElementById('sopt-'+s);if(el)el.classList.add('sel');
-}
-
-async function enrichNotes(){
-  const c=getC();
-  if(!c){toast('No contact selected');return;}
-  const btn=document.getElementById('enrich-btn');if(btn)btn.disabled=true;
-  const loading=document.getElementById('enrich-loading');
-  if(loading){loading.style.display='block';loading.style.color='var(--text3)';loading.textContent='Enriching notes...';}
-  const field=document.getElementById('desc-field');
-  const current=(field?field.value:null)||c.description||'';
-  if(!current.trim()){
-    if(loading)loading.style.display='none';
-    if(btn)btn.disabled=false;
-    toast('Add some notes first');return;
-  }
-  try{
-    const enriched=await callAI(
-      'You are a professional relationship manager helping structure conference contact notes.' +
-      ' Transform the raw notes into a clean structured format. Use only these plain-text section headers in ALL CAPS, and only include a section if there is actual content for it:' +
-      ' BACKGROUND: Who they are, role and organization.' +
-      ' CONTEXT: How and where we met, what was discussed.' +
-      ' OPPORTUNITY: Key opportunity, shared interest, or potential collaboration.' +
-      ' THEIR INTEREST: What they expressed interest in or excitement about.' +
-      ' NEXT STEPS: Numbered list of concrete follow-up actions.' +
-      ' Rules: Plain text only. No asterisks, no dashes, no markdown. Numbers for next steps (1. 2. 3.). 1-3 sentences per section max. Preserve every specific name, organization, and detail exactly as written. Do not add anything not in the notes. Return only the structured notes with no preamble or explanation.',
-      'Contact: ' + c.name + '\nTitle/Org: ' + ([c.title,c.org].filter(Boolean).join(', ')||'unknown') + '\nEvent: ' + (c.source||'conference') + '\nIssues: ' + ((c.issues||[]).join('; ')||'none') + '\nThemes: ' + ((c.tags||[]).join(', ')||'none') + '\nRaw notes: ' + current
-    );
-    if(field)field.value=enriched;
-    updC({description:enriched});
-    if(loading)loading.style.display='none';
-    toast('Notes enriched');
-  }catch(e){
-    console.error('Enrich error:',e);
-    if(loading){loading.textContent='Could not enrich: '+e.message;loading.style.color='#c00';}
-    setTimeout(()=>{if(loading)loading.style.display='none';},4000);
-  }
-  if(btn)btn.disabled=false;
-}
-
-function saveLinkedIn(){
-  const c=getC();if(!c)return;
-  const inp=document.getElementById('linkedin-input');
-  if(!inp)return;
-  const url=inp.value.trim();
-  if(url && !url.includes('linkedin.com')){toast('Please enter a valid LinkedIn URL');return;}
-  updC({linkedin:url});
-  renderPanelBody();
-  toast(url ? 'LinkedIn profile saved ✓' : 'LinkedIn URL cleared');
-}
-
-function searchLinkedIn(){
-  const c=getC();if(!c)return;
-  const q=encodeURIComponent(c.name)+'+'+encodeURIComponent(c.org||'');
-  window.open('https://www.google.com/search?q=site:linkedin.com/in+'+q,'_blank');
-}
-async function extractToFields(){
-  const c=getC();
-  if(!c){toast('No contact selected');return;}
-  const btn=document.getElementById('extract-btn');if(btn)btn.disabled=true;
-  const loading=document.getElementById('extract-loading');
-  const result=document.getElementById('extract-result');
-  if(loading){loading.style.display='block';}
-  if(result){result.style.display='none';}
-
-  const field=document.getElementById('desc-field');
-  const notes=(field?field.value:null)||c.description||'';
-  if(!notes.trim()){
-    if(loading)loading.style.display='none';
-    if(btn)btn.disabled=false;
-    toast('Add some meeting notes first');return;
-  }
-
-  const existingIssues=JSON.stringify(c.issues||[]);
-  const existingTags=JSON.stringify(c.tags||[]);
-
-  const sys=`You extract contact details from informal meeting notes or spoken voice memos. Return ONLY valid JSON — no explanation, no markdown fences.
-
-Shape: {"title":"","org":"","email":"","phone":"","new_issues":[],"new_tags":[]}
-
-Rules:
-- title: professional title if clearly mentioned, else empty string
-- org: organisation/company if mentioned, else empty string
-- email: email address if present, else empty string
-- phone: phone number if present, else empty string
-- new_issues: specific topics, projects, or items discussed (max 6). Exclude anything already in: ${existingIssues}
-- new_tags: broad thematic categories (max 5). Exclude anything already in: ${existingTags}
-
-Only extract what is clearly present in the notes. Never invent details.`;
-
-  const usr=`Contact name: ${c.name}\nCurrent title: ${c.title||'(empty)'}\nCurrent org: ${c.org||'(empty)'}\nCurrent email: ${c.email||'(empty)'}\nCurrent phone: ${c.phone||'(empty)'}\n\nMeeting notes:\n${notes}`;
-
-  try{
-    const raw=await callAI(sys,usr);
-    const data=JSON.parse(raw.replace(/```json|```/g,'').trim());
-
-    const updates={};
-    const filled=[];
-
-    // Only fill fields that are currently empty
-    if(data.title&&!c.title){updates.title=data.title;filled.push('Title: '+data.title);}
-    if(data.org&&!c.org){updates.org=data.org;filled.push('Org: '+data.org);}
-    if(data.email&&!c.email){updates.email=data.email;filled.push('Email: '+data.email);}
-    if(data.phone&&!c.phone){updates.phone=data.phone;filled.push('Phone: '+data.phone);}
-
-    // Append new issues/tags (never replace)
-    if((data.new_issues||[]).length){
-      const existing=c.issues||[];
-      const toAdd=data.new_issues.filter(i=>!existing.includes(i));
-      if(toAdd.length){updates.issues=[...existing,...toAdd];filled.push('Issues: +'+toAdd.join(', '));}
-    }
-    if((data.new_tags||[]).length){
-      const existing=c.tags||[];
-      const toAdd=data.new_tags.filter(t=>!existing.includes(t));
-      if(toAdd.length){updates.tags=[...existing,...toAdd];filled.push('Tags: +'+toAdd.join(', '));}
-    }
-
-    if(Object.keys(updates).length){
-      updC(updates);
-      renderPanelBody();
-      toast('Fields extracted ✓');
-    } else {
-      // Show a message if nothing was filled
-      if(result){
-        result.style.display='block';
-        result.textContent='No new fields found — notes may not contain extractable details, or all fields already have values.';
-      }
-    }
-  }catch(e){
-    console.error('Extract error:',e);
-    if(result){result.style.display='block';result.textContent='Extract failed: '+e.message;}
-    else{toast('Extract failed: '+e.message);}
-  }
-  if(loading)loading.style.display='none';
-  if(btn)btn.disabled=false;
-}
-
-const MODEL_EMAIL_EXAMPLE = `Subject: Great meeting you at Skoll
-
-Erin,
-
-It was a real pleasure meeting you at the Center for Exponential Change breakfast at Skoll. Beryl also enjoyed her conversation with you and came away energized by the exchange.
-
-I was glad we discovered the North Carolina connection as well. Our son lives in the Triangle, so we find ourselves there more often than you might expect.
-
-As you settle back in and continue reflecting on ideas from the Forum, I would welcome the chance to hear how your thinking evolves around the KX partnership and whether there may be natural points of connection with your work. And if an in-person conversation makes sense during a future visit, I would be glad to make that happen.
-
-No rush — I simply wanted to keep the thread open and say how much I appreciated the chance to connect.
-
-Best, Evan`;
-
-const EMAIL_STYLE_GUIDE = 'Write in a warm, natural, professional voice. Avoid overly polished, generic, or AI-sounding language. The tone should feel thoughtful and human, but not gushy. Keep the email concise, usually 2-4 short paragraphs. Open by referencing the specific place or context where we met. Include one genuine personal or relational detail only if one is present in the notes — if there is no personal detail, skip it entirely. Connect naturally to the professional topic without overstating the opportunity. Avoid hard selling, exaggerated enthusiasm, or phrases like "excited to explore synergies," "it was truly inspiring," "the right people finding each other," or "circle back." End lightly, with an open invitation and no pressure. Make it sound like a real person wrote it. No subject line. Sign off: Best, Evan.';
-
-async function genEmail(){
-  const c=getC();const scenario=scenarioMap[c.id]||'nicetomeet';
-  const btn=document.getElementById('gen-btn');if(btn)btn.disabled=true;
-  const loading=document.getElementById('email-loading');if(loading)loading.style.display='';
-
-  const ctx='Contact: '+c.name+'\nTitle/Org: '+([c.title,c.org].filter(Boolean).join(', ')||'unknown')+'\nEmail: '+(c.email||'n/a')+'\nIssues discussed: '+((c.issues||[]).join('; ')||'none')+'\nThemes: '+((c.tags||[]).join(', ')||'none')+'\nMeeting notes: '+(c.description||'none')+'\nConference/event: '+(c.source||currentSource||'conference');
-
-  const intros={
-    nicetomeet:'This is a first follow-up after meeting at a conference or event.',
-    substantive:'This follows a more substantive conversation. There may be a resource, idea, or next step to reference.',
-    continuing:'This continues an ongoing exchange that has already had some back-and-forth.'
-  };
-
-  const sys='You are helping Evan from Root Change write a follow-up email after meeting someone at a conference or event. ' +
-    intros[scenario] + ' ' + EMAIL_STYLE_GUIDE +
-    '\n\nHere is a model email that shows the right tone and style. Match this voice closely:\n\n' + MODEL_EMAIL_EXAMPLE;
-
-  try{
-    const email=await callAI(sys,ctx);
-    updC({emailDraft:email});
-  }catch(e){toast('Error: '+e.message);}
-  renderPanelBody();
-}
-function copyEmail(){const t=document.getElementById('email-text')?.value;if(t)navigator.clipboard.writeText(t).then(()=>toast('Copied!'));}
-
-
-// ── Map view ──────────────────────────────────────────────────────────
-let mapVisible = false;
-let mapState = null; // holds simulation + canvas state
-
-const MAP_PALETTE = ['#e05555','#3db87a','#8b7ef0','#f5a623','#5a9aba','#e8845a','#4bc9a0','#b06ef0','#f5c842','#6ab0d4'];
-
-function toggleMapView(){
-  mapVisible = !mapVisible;
-  const boardWrap = document.querySelector('.board-wrap');
-  const mapWrap = document.getElementById('map-wrap');
-  const btn = document.getElementById('map-toggle-btn');
-  if(mapVisible){
-    boardWrap.style.display = 'none';
-    mapWrap.style.display = 'flex';
-    btn.textContent = 'Board view';
-    btn.style.background = '#1a1c21';
-    btn.style.color = '#e2ddd6';
-    btn.style.borderColor = 'rgba(255,255,255,0.2)';
-    requestAnimationFrame(renderMap);
-  } else {
-    if(mapState) { mapState.sim.stop(); mapState = null; }
-    boardWrap.style.display = '';
-    mapWrap.style.display = 'none';
-    btn.textContent = 'Map view';
-    btn.style.background = 'transparent';
-    btn.style.color = 'var(--text2)';
-    btn.style.borderColor = 'var(--border2)';
-  }
-}
-
-function renderMap(){
-  const canvas = document.getElementById('map-canvas');
-  const wrap = document.getElementById('map-wrap');
-  const legend = document.getElementById('map-legend');
-  const lbl = document.getElementById('map-board-label');
-  legend.innerHTML = '';
-  if(lbl) lbl.textContent = currentBoard || '';
-
-  const dpr = window.devicePixelRatio || 1;
-  const W = wrap.clientWidth;
-  const H = wrap.clientHeight;
-  canvas.width = W * dpr;
-  canvas.height = H * dpr;
-  canvas.style.width = W + 'px';
-  canvas.style.height = H + 'px';
-  const ctx = canvas.getContext('2d');
-  ctx.scale(dpr, dpr);
-
-  const boardContacts = currentBoard ? contacts.filter(c => c.source === currentBoard) : contacts;
-
-  if(!boardContacts.length){
-    ctx.fillStyle = 'rgba(255,255,255,0.2)';
-    ctx.font = '14px -apple-system,sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('No contacts to map', W/2, H/2);
-    return;
-  }
-
-  // Build tag frequency
-  const tagFreq = {};
-  boardContacts.forEach(c => (c.tags||[]).forEach(t => { tagFreq[t] = (tagFreq[t]||0) + 1; }));
-  const allTags = Object.keys(tagFreq).sort((a,b) => tagFreq[b]-tagFreq[a]);
-
-  // Color map
-  const colorMap = {};
-  allTags.forEach((t,i) => { colorMap[t] = MAP_PALETTE[i % MAP_PALETTE.length]; });
-  colorMap['__none__'] = '#4a5568';
-
-  // Dominant tag per contact: tag shared with most other contacts
-  function dominantTag(c){
-    const tags = c.tags || [];
-    if(!tags.length) return '__none__';
-    return tags.reduce((best, t) => (tagFreq[t]||0) > (tagFreq[best]||0) ? t : best, tags[0]);
-  }
-
-  // Build nodes: TAG hubs + CONTACT nodes
-  const tagNodes = allTags.map((t,i) => ({
-    id: 'tag:'+t, label: t, type: 'tag', tag: t,
-    color: colorMap[t], count: tagFreq[t],
-    x: W/2 + Math.cos(i/allTags.length*Math.PI*2)*120,
-    y: H/2 + Math.sin(i/allTags.length*Math.PI*2)*120
-  }));
-
-  const contactNodes = boardContacts.map(c => ({
-    id: 'c:'+c.id, label: c.name, type: 'contact',
-    org: c.org||'', tags: c.tags||[], domTag: dominantTag(c),
-    color: colorMap[dominantTag(c)], contact: c,
-    x: W/2 + (Math.random()-.5)*W*.5,
-    y: H/2 + (Math.random()-.5)*H*.5
-  }));
-
-  const allNodes = [...tagNodes, ...contactNodes];
-  const nodeById = {};
-  allNodes.forEach(n => { nodeById[n.id] = n; });
-
-  // Links: each contact to each of its tags, contacts sharing tags to each other
-  const links = [];
-  contactNodes.forEach(cn => {
-    (cn.tags||[]).forEach(t => {
-      if(nodeById['tag:'+t]) links.push({source: cn, target: nodeById['tag:'+t], type:'hub'});
-    });
-  });
-
-  // Pan + zoom state
-  let tx=0, ty=0, scale=1;
-  let dragging=null, panStart=null, panTx=0, panTy=0;
-  let highlighted=null;
-
-  // Force simulation
-  const sim = d3.forceSimulation(allNodes)
-    .force('link', d3.forceLink(links).id(d=>d.id).distance(d => d.type==='hub' ? 100 : 70).strength(d => d.type==='hub' ? 0.5 : 0.08))
-    .force('charge', d3.forceManyBody().strength(n => n.type==='tag' ? -500 : -80))
-    .force('center', d3.forceCenter(W/2, H/2).strength(0.04))
-    .force('collision', d3.forceCollide(n => n.type==='tag' ? 44 : 20).strength(0.7))
-    .velocityDecay(0.65)
-    .alphaDecay(0.018)
-    .on('tick', draw);
-
-  function tagR(n){ return Math.max(20, 14 + Math.sqrt(n.count) * 5); }
-  function contactR(){ return 9; }
-
-  function draw(){
-    ctx.clearRect(0, 0, W, H);
-    ctx.save();
-    ctx.translate(tx, ty);
-    ctx.scale(scale, scale);
-
-    // Draw hub links
-    links.forEach(l => {
-      const s = l.source, t = l.target;
-      if(!s.x||!t.x) return;
-      // A link is active if it connects to the hovered or selected cluster
-      // Source and target identification
-      const sIsContact = s.type==='contact', tIsTag = t.type==='tag';
-      const sInCluster = selected && (s.tags||[]).includes(selected);
-      const tIsSelHub = selected && t.tag===selected;
-      const tIsSecondaryHub = selected && tIsTag && !tIsSelHub && sInCluster;
-      const sInContactFocus = selectedContact && s.id===selectedContact.id;
-      const tInContactFocusTags = selectedContact && tIsTag && (selectedContact.tags||[]).includes(t.tag);
-
-      // Primary link: member → selected hub
-      const isPrimary = tIsSelHub && sInCluster;
-      // Secondary link: member → other tag hubs they belong to
-      const isSecondary = tIsSecondaryHub;
-      // Contact focus links
-      const isContactLink = sInContactFocus && tInContactFocusTags;
-      // Hover highlight
-      const isHovered = highlighted && (s.id===highlighted||t.id===highlighted||t.tag===highlighted);
-
-      ctx.beginPath();
-      ctx.moveTo(s.x, s.y);
-      ctx.lineTo(t.x, t.y);
-      ctx.strokeStyle = t.color || s.color || '#888';
-      if(isPrimary || isContactLink || isHovered) {
-        ctx.globalAlpha = 0.65; ctx.lineWidth = 1.5;
-      } else if(isSecondary) {
-        ctx.globalAlpha = 0.25; ctx.lineWidth = 0.8;
-      } else if(selected || selectedContact) {
-        ctx.globalAlpha = 0.02; ctx.lineWidth = 0.5;
-      } else {
-        ctx.globalAlpha = highlighted ? 0.05 : 0.38; ctx.lineWidth = 0.8;
-      }
-      ctx.stroke();
-    });
-    ctx.globalAlpha = 1;
-
-    // Draw contact nodes
-    contactNodes.forEach(n => {
-      if(!n.x) return;
-      const isHl = highlighted === n.id || (selectedContact && selectedContact.id === n.id);
-      const tagHl = (highlighted && highlighted.startsWith('tag:') && (n.tags||[]).includes(highlighted.replace('tag:','')))
-                  || (selected && (n.tags||[]).includes(selected));
-      const dim = (highlighted || selected || selectedContact) && !isHl && !tagHl;
-      const r = contactR();
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, r, 0, Math.PI*2);
-      ctx.fillStyle = n.color;
-      ctx.globalAlpha = isHl ? 1 : (tagHl ? 0.9 : (dim ? 0.08 : 0.75));
-      ctx.fill();
-      if(isHl || tagHl){
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 1.5;
-        ctx.globalAlpha = 1;
-        ctx.stroke();
-        // label
-        const first = n.label.split(' ')[0];
-        ctx.font = '500 10px -apple-system,sans-serif';
-        ctx.fillStyle = '#e2ddd6';
-        ctx.textAlign = 'center';
-        ctx.globalAlpha = 0.95;
-        ctx.fillText(first, n.x, n.y + r + 12);
-      } else if(!dim && scale > 1.4){
-        const first = n.label.split(' ')[0];
-        ctx.font = '9px -apple-system,sans-serif';
-        ctx.fillStyle = 'rgba(226,221,214,0.7)';
-        ctx.textAlign = 'center';
-        ctx.globalAlpha = 0.7;
-        ctx.fillText(first, n.x, n.y + r + 11);
-      }
-      ctx.globalAlpha = 1;
-    });
-
-    // Draw tag hub nodes (on top)
-    tagNodes.forEach(n => {
-      if(!n.x) return;
-      const isHl = (highlighted && n.id === highlighted) || (selected && n.tag === selected)
-                 || (selectedContact && (selectedContact.tags||[]).includes(n.tag));
-      const contactHoveredTagHl = highlighted && highlighted.startsWith('c:') && (() => {
-        const hc = contactNodes.find(cn => cn.id === highlighted);
-        return hc && (hc.tags||[]).includes(n.tag);
-      })();
-      // Is this a secondary hub — a tag that cluster members also belong to?
-      const isSecondaryHub = selected && !isHl && !contactHoveredTagHl &&
-        contactNodes.some(cn => (cn.tags||[]).includes(selected) && (cn.tags||[]).includes(n.tag));
-      const dim = (highlighted || selected || selectedContact) && !isHl && !contactHoveredTagHl && !isSecondaryHub;
-      const r = tagR(n);
-      // Glow
-      if(!dim){
-        const grd = ctx.createRadialGradient(n.x, n.y, r*.3, n.x, n.y, r*2.2);
-        grd.addColorStop(0, n.color+'33');
-        grd.addColorStop(1, n.color+'00');
-        ctx.beginPath(); ctx.arc(n.x, n.y, r*2.2, 0, Math.PI*2);
-        ctx.fillStyle = grd; ctx.globalAlpha = (isHl||contactHoveredTagHl)?1:(isSecondaryHub?0.3:0.5); ctx.fill();
-      }
-      // Circle
-      ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI*2);
-      ctx.fillStyle = n.color+'22';
-      ctx.globalAlpha = dim ? 0.04 : (isSecondaryHub ? 0.35 : 0.9); ctx.fill();
-      ctx.strokeStyle = n.color;
-      ctx.lineWidth = isHl ? 2.5 : 1.5;
-      ctx.globalAlpha = (isHl||contactHoveredTagHl) ? 1 : (dim ? 0.04 : (isSecondaryHub ? 0.35 : 0.85)); ctx.stroke();
-      // Label
-      ctx.globalAlpha = (isHl||contactHoveredTagHl) ? 1 : (dim ? 0.04 : (isSecondaryHub ? 0.35 : 0.85));
-      ctx.font = (isHl?'600 ':'500 ') + Math.min(12, Math.max(9, r*.55)) + 'px -apple-system,sans-serif';
-      ctx.fillStyle = isHl ? '#ffffff' : n.color;
-      ctx.textAlign = 'center';
-      ctx.fillText(n.label, n.x, n.y - 2);
-      ctx.font = '9px -apple-system,sans-serif';
-      ctx.fillStyle = 'rgba(255,255,255,0.4)';
-      ctx.fillText(n.count + (n.count===1?' contact':' contacts'), n.x, n.y + 12);
-      ctx.globalAlpha = 1;
-    });
-
-    ctx.restore();
-  }
-
-  // Tooltip
-  const tip = document.getElementById('map-tooltip');
-  function hitTest(mx, my){
-    const wx = (mx - tx) / scale;
-    const wy = (my - ty) / scale;
-    // Check tag nodes first (on top)
-    for(const n of tagNodes){
-      if(!n.x) continue;
-      const r = tagR(n);
-      if((wx-n.x)**2+(wy-n.y)**2 < r*r) return n;
-    }
-    for(const n of contactNodes){
-      if(!n.x) continue;
-      const r = contactR() + 4;
-      if((wx-n.x)**2+(wy-n.y)**2 < r*r) return n;
-    }
-    return null;
-  }
-
-  // Selected cluster state (click on tag hub to lock)
-  let selected = null; // tag string of locked cluster
-  let selectedContact = null; // contact node of focused contact
-
-  function selectCluster(tagStr){
-    if(selected === tagStr && !selectedContact){ deselect(); return; }
-    selected = tagStr; selectedContact = null;
-    const hub = tagNodes.find(n => n.tag === tagStr);
-    const members = contactNodes.filter(n => (n.tags||[]).includes(tagStr));
-    if(hub){
-      hub.fx = W/2; hub.fy = H/2;
-      const r = Math.max(90, 45 + members.length * 16);
-      members.forEach((n, i) => {
-        const angle = (i / members.length) * Math.PI * 2 - Math.PI/2;
-        n.fx = W/2 + Math.cos(angle) * r;
-        n.fy = H/2 + Math.sin(angle) * r;
-      });
-    }
-    // Release non-member contacts so they drift away
-    contactNodes.forEach(n => { if(!(n.tags||[]).includes(tagStr)){ n.fx=null; n.fy=null; } });
-    // Release other tag hubs — they'll float but stay on screen
-    tagNodes.forEach(n => { if(n.tag !== tagStr){ n.fx=null; n.fy=null; } });
-    sim.alpha(0.4).restart();
-    tx=0; ty=0; scale=1;
-  }
-
-  function selectContact(cn){
-    if(selectedContact && selectedContact.id === cn.id){ deselect(); return; }
-    selectedContact = cn; selected = null;
-    const myTags = cn.tags || [];
-    // Fix contact at center
-    cn.fx = W/2; cn.fy = H/2;
-    // Fix its tag hubs in a ring around it
-    const hubR = Math.max(110, 60 + myTags.length * 28);
-    myTags.forEach((t, i) => {
-      const hub = tagNodes.find(n => n.tag === t);
-      if(hub){
-        const angle = (i / myTags.length) * Math.PI * 2 - Math.PI/2;
-        hub.fx = W/2 + Math.cos(angle) * hubR;
-        hub.fy = H/2 + Math.sin(angle) * hubR;
-      }
-    });
-    // Release all other nodes so they drift away
-    tagNodes.forEach(n => { if(!myTags.includes(n.tag)){ n.fx=null; n.fy=null; } });
-    contactNodes.forEach(n => { if(n.id !== cn.id){ n.fx=null; n.fy=null; } });
-    sim.alpha(0.5).restart();
-    tx=0; ty=0; scale=1;
-  }
-
-  function deselect(){
-    selected = null; selectedContact = null;
-    allNodes.forEach(n => { n.fx=null; n.fy=null; });
-    sim.alpha(0.3).restart();
-  }
-
-  function showTip(e, hit){
-    tip.style.display = 'block';
-    tip.style.left = (e.clientX+14)+'px';
-    tip.style.top = (e.clientY-10)+'px';
-    if(hit.type==='tag'){
-      const members = contactNodes.filter(n=>(n.tags||[]).includes(hit.tag)).map(n=>n.label).join(', ');
-      tip.innerHTML = '<strong style="color:'+hit.color+'">'+hit.label+'</strong><br><span style="color:rgba(255,255,255,0.4)">'+hit.count+' contact'+(hit.count!==1?'s':'')+'</span>'+(members?'<br><span style="color:rgba(255,255,255,0.3);font-size:10px;">'+members+'</span>':'')+'<br><span style="color:rgba(255,255,255,0.25);font-size:10px;margin-top:2px;display:block;">Click to focus cluster</span>';
-    } else {
-      tip.innerHTML = '<strong style="color:#e2ddd6">'+hit.label+'</strong>'+(hit.org?'<br><span style="color:rgba(255,255,255,0.4)">'+hit.org+'</span>':'')+(hit.tags.length?'<br><span style="color:rgba(255,255,255,0.3);font-size:10px;">'+hit.tags.join(', ')+'</span>':'')+'<br><span style="color:rgba(255,255,255,0.25);font-size:10px;margin-top:2px;display:block;">Click to open</span>';
-    }
-  }
-
-  canvas.onmousedown = e => {
-    const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
-    const hit = hitTest(mx, my);
-    if(hit){ dragging = hit; if(!selected) sim.alphaTarget(0.15).restart(); }
-    else { panStart = {x:e.clientX,y:e.clientY}; panTx=tx; panTy=ty; canvas.style.cursor='grabbing'; }
-  };
-
-  canvas.onmousemove = e => {
-    const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
-    if(dragging){
-      dragging.fx = (mx - tx)/scale;
-      dragging.fy = (my - ty)/scale;
-      draw(); return;
-    }
-    if(panStart){
-      tx = panTx + (e.clientX - panStart.x);
-      ty = panTy + (e.clientY - panStart.y);
-      draw(); return;
-    }
-    const hit = hitTest(mx, my);
-    canvas.style.cursor = hit ? 'pointer' : (selected ? 'default' : 'grab');
-    if(hit){ highlighted = hit.id; showTip(e, hit); }
-    else { highlighted = null; tip.style.display = 'none'; }
-    draw();
-  };
-
-  canvas.onmouseleave = () => { tip.style.display='none'; highlighted=null; draw(); };
-
-  canvas.onmouseup = e => {
-    if(dragging){ 
-      // If not selected mode, release node to float free
-      if(!selected){ dragging.fx=null; dragging.fy=null; sim.alphaTarget(0); }
-      dragging=null;
-    }
-    if(panStart){ panStart=null; canvas.style.cursor = selected?'default':'grab'; }
-  };
-
-  canvas.onclick = e => {
-    const rect = canvas.getBoundingClientRect();
-    const hit = hitTest(e.clientX-rect.left, e.clientY-rect.top);
-    if(!hit){ if(selected||selectedContact) deselect(); return; }
-    if(hit.type==='tag'){
-      // If in contact-focus mode, clicking a tag hub enters that cluster
-      if(selectedContact){ selectCluster(hit.tag); return; }
-      selectCluster(hit.tag); return;
-    }
-    if(hit.type==='contact'){
-      // If already focused on this contact, open panel; otherwise focus
-      if(selectedContact && selectedContact.id === hit.id){ openPanel(hit.contact); return; }
-      selectContact(hit);
-    }
-  };
-
-  canvas.onwheel = e => {
-    e.preventDefault();
-    const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
-    const delta = e.deltaY > 0 ? 0.85 : 1.18;
-    const newScale = Math.max(0.2, Math.min(5, scale*delta));
-    tx = mx - (mx-tx)*(newScale/scale);
-    ty = my - (my-ty)*(newScale/scale);
-    scale = newScale;
-    draw();
-  };
-
-  // Legend — clicking focuses that cluster
-  allTags.slice(0,12).forEach(t => {
-    const el = document.createElement('div');
-    el.style.cssText = 'display:flex;align-items:center;gap:5px;font-size:10px;color:rgba(226,221,214,0.7);background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.12);border-radius:20px;padding:3px 9px;cursor:pointer;transition:background 0.15s;';
-    el.innerHTML = '<span style="width:7px;height:7px;border-radius:50%;background:'+colorMap[t]+';flex-shrink:0;"></span>'+t+'<span style="color:rgba(255,255,255,0.3);margin-left:2px;">('+tagFreq[t]+')</span>';
-    el.onclick = () => selectCluster(t);
-    legend.appendChild(el);
-  });
-
-  mapState = {sim, draw};
-}
-
-// ── Add contact ───────────────────────────────────────────────────────
-let tmp={};
-function openAdd(col='todo'){addTargetCol=col;tmp={issues:[],tags:[],assignees:[],source:currentBoard||currentSource,_step:'input'};renderAdd();document.getElementById('add-modal').classList.add('open');}
-function closeAdd(){document.getElementById('add-modal').classList.remove('open');}
-function renderAdd(){
-  const body=document.getElementById('add-body');
-  if(tmp._step==='input'){
-    body.innerHTML=`<p style="font-size:13px;color:var(--text2);margin-bottom:12px;">Describe who you met - AI will extract the details - or fill in manually.</p>
-    <label class="fl">Meeting notes</label>
-    <textarea id="add-desc" rows="5" placeholder='e.g. "Met Sarah Chen at the Skoll Forum - VP of Policy at GreenFund. Discussed carbon markets. sarah@greenfund.org"' style="margin-bottom:12px;"></textarea>
-    <div style="display:flex;gap:8px;justify-content:flex-end;">
-      <button onclick="skipManual()">Fill in manually</button>
-      <button class="primary" id="ext-btn" onclick="extractC()">Extract with AI</button>
-    </div>`;
-  } else if(tmp._step==='parsing'){
-    body.innerHTML=`<div style="text-align:center;padding:32px;"><div class="spinner"></div><div style="font-size:14px;font-weight:500;">Extracting...</div></div>`;
-  } else {
-    const ic=(tmp.issues||[]).map(i=>`<span class="chip">${esc(i)}<button class="chip-x" onclick="rmAdd('issues','${esc(i)}')">x</button></span>`).join('');
-    const tc=(tmp.tags||[]).map(t=>{const p=tpC(t);return`<span class="tag" style="background:${p.bg};color:${p.fg};gap:4px;">${esc(t)}<button class="chip-x" onclick="rmAdd('tags','${esc(t)}')" style="color:${p.fg};">x</button></span>`;}).join('');
-    body.innerHTML=`<div class="g2" style="margin-bottom:12px;">
-      <div><label class="fl">Name *</label><input id="af-name" type="text" value="${esc(tmp.name||'')}"></div>
-      <div><label class="fl">Title</label><input id="af-title" type="text" value="${esc(tmp.title||'')}"></div>
-      <div><label class="fl">Organization</label><input id="af-org" type="text" value="${esc(tmp.org||'')}"></div>
-      <div><label class="fl">Email</label><input id="af-email" type="email" value="${esc(tmp.email||'')}"></div>
-      <div><label class="fl">Phone</label><input id="af-phone" type="text" value="${esc(tmp.phone||'')}"></div>
-      <div><label class="fl">Event / Conference</label><input id="af-source" type="text" value="${esc(tmp.source||currentSource||'')}"></div>
-    </div>
-    <div class="divider"></div>
-    <label class="fl">Issues</label>
-    <div class="chips-row" style="margin-bottom:7px;">${ic||'<span style="font-size:12px;color:var(--text3);">None</span>'}</div>
-    <div class="row" style="margin-bottom:12px;"><input type="text" id="ai-inp" placeholder="Add issue..." style="flex:1;" onkeydown="if(event.key==='Enter')addAdd('issues')"><button onclick="addAdd('issues')">Add</button></div>
-    <label class="fl">Thematic priorities</label>
-    <div class="chips-row" style="margin-bottom:7px;">${tc||'<span style="font-size:12px;color:var(--text3);">None</span>'}</div>
-    <div class="row"><input type="text" id="at-inp" placeholder="Add tag..." style="flex:1;" onkeydown="if(event.key==='Enter')addAdd('tags')"><button onclick="addAdd('tags')">Add</button></div>
-    <div class="modal-foot" style="margin:16px -22px -18px;padding:12px 22px;">
-      <button onclick="tmp._step='input';renderAdd();">Back</button>
-      <button class="primary" onclick="saveNew()">Save contact</button>
-    </div>`;
-  }
-}
-function skipManual(){tmp={issues:[],tags:[],assignees:[],source:currentBoard||currentSource,_step:'form'};renderAdd();}
-async function extractC(){
-  const desc=document.getElementById('add-desc')?.value.trim();if(!desc)return;
-  tmp._desc=desc;tmp._step='parsing';renderAdd();
-  try{
-    const raw=await callAI('Extract conference contact info. Return ONLY valid JSON:\n{"name":"","title":"","org":"","email":"","phone":"","issues":[],"tags":[]}\nissues=specific topics (max 6). tags=broad themes (max 6).',desc);
-    Object.assign(tmp,JSON.parse(raw.replace(/```json|```/g,'').trim()));tmp._step='form';
-  }catch{tmp._step='form';toast('AI extraction failed - fill in manually');}
-  renderAdd();
-}
-function addAdd(f){const inp=document.getElementById(f==='issues'?'ai-inp':'at-inp');const v=inp?.value.trim();if(!v)return;if(!(tmp[f]||[]).includes(v))tmp[f]=[...(tmp[f]||[]),v];inp.value='';renderAdd();}
-function rmAdd(f,v){tmp[f]=(tmp[f]||[]).filter(x=>x!==v);renderAdd();}
-function saveNew(){
-  const name=document.getElementById('af-name')?.value.trim();if(!name){alert('Name is required.');return;}
-  const c={id:'c'+Date.now(),name,
-    title:document.getElementById('af-title')?.value.trim()||'',
-    org:document.getElementById('af-org')?.value.trim()||'',
-    email:document.getElementById('af-email')?.value.trim()||'',
-    phone:document.getElementById('af-phone')?.value.trim()||'',
-    source:document.getElementById('af-source')?.value.trim()||currentSource||'',
-    description:tmp._desc||'',issues:[...(tmp.issues||[])],tags:[...(tmp.tags||[])],
-    assignees:[...(tmp.assignees||[])],tasks:[],emailDraft:'',status:addTargetCol,createdAt:new Date().toISOString()};
-  contacts.push(c);syncOne(c);render();closeAdd();toast('Contact saved!');openPanel(c.id);
-}
-
-// ── Board management ──────────────────────────────────────────────────
-function getBoards(){
-  const fromContacts=[...new Set(contacts.map(c=>c.source||'').filter(Boolean))];
-  const saved=JSON.parse(localStorage.getItem('cf_boards')||'["Skoll World Forum"]');
-  // Saved boards first (preserving creation order), then any from contacts not yet saved
-  const all=[...saved];
-  fromContacts.forEach(b=>{if(!all.includes(b))all.push(b);});
-  return all;
-}
-
-function saveBoards(boards){
-  localStorage.setItem('cf_boards',JSON.stringify(boards));
-}
-
-function switchBoard(board){
-  currentBoard=board;
-  localStorage.setItem('cf_board',board);
-  activeTag='';
-  render();
-}
-
-function renderBoardTabs(){
-  const bar=document.getElementById('board-tabs-bar');
-  if(!bar)return;
-  bar.innerHTML='';
-
-  // All boards tab
-  const allBtn=document.createElement('button');
-  allBtn.className='btab all'+(currentBoard===''?' active':'');
-  allBtn.textContent='All events';
-  allBtn.onclick=()=>switchBoard('');
-  bar.appendChild(allBtn);
-
-  // Separator
-  const sep=document.createElement('span');
-  sep.style.cssText='width:1px;height:18px;background:var(--border);flex-shrink:0;';
-  bar.appendChild(sep);
-
-  // One tab per board
-  getBoards().forEach(board=>{
-    const count=contacts.filter(c=>c.source===board).length;
-    const btn=document.createElement('button');
-    btn.className='btab'+(currentBoard===board?' active':'');
-    btn.innerHTML=`<span style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block;">${esc(board)}</span><span style="margin-left:5px;font-size:10px;opacity:.6;">${count}</span>`;
-    btn.onclick=()=>switchBoard(board);
-    btn.title=board;
-    bar.appendChild(btn);
-  });
-
-  // New event button
-  const newBtn=document.createElement('button');
-  newBtn.className='btab-new';
-  newBtn.textContent='+ New event';
-  newBtn.onclick=openNewEventModal;
-  bar.appendChild(newBtn);
-}
-
-function openNewEventModal(){
-  document.getElementById('new-event-inp').value='';
-  document.getElementById('new-event-modal').classList.add('open');
-  setTimeout(()=>document.getElementById('new-event-inp').focus(),100);
-}
-function closeNewEventModal(){document.getElementById('new-event-modal').classList.remove('open');}
-function createEventBoard(){
-  const name=document.getElementById('new-event-inp').value.trim();
-  if(!name){alert('Please enter an event name.');return;}
-  const boards=getBoards();
-  if(!boards.includes(name)){boards.push(name);saveBoards(boards);}
-  currentSource=name;
-  currentBoard=name;
-  localStorage.setItem('cf_source',name);
-  localStorage.setItem('cf_board',name);
-  closeNewEventModal();
-  render();
-  toast('Board created: '+name);
-}
-
-// ── API key ───────────────────────────────────────────────────────────
-function updatePill(){
-  const pill=document.getElementById('api-pill');const key=getKey();
-  if(key){pill.textContent='AI ready';pill.style.cssText='font-size:11px;font-weight:700;padding:5px 11px;border-radius:20px;background:#e4f4ef;color:#0d7a5f;border:1px solid #a7ddd0;cursor:pointer;';}
-  else{pill.textContent='Add API key';pill.style.cssText='font-size:11px;font-weight:700;padding:5px 11px;border-radius:20px;background:#fef3c7;color:#92400e;border:1px solid #fde68a;cursor:pointer;animation:pillpulse 2s infinite;';}
-}
-function maskKey(k){return k?k.slice(0,10)+'........'+k.slice(-4):'';}
-function openApiModal(){
-  const key=getKey();const wrap=document.getElementById('api-current-wrap');
-  document.getElementById('api-msg').textContent='';
-  document.getElementById('apikey').value='';
-  document.getElementById('apikey').type='password';
-  if(key){wrap.style.display='';document.getElementById('api-masked').textContent=maskKey(key);document.getElementById('api-input-label').textContent='Replace with a new key';document.getElementById('save-key-btn').disabled=false;document.getElementById('save-key-btn').style.opacity='1';}
-  else{wrap.style.display='none';document.getElementById('api-input-label').textContent='Enter your API key';document.getElementById('save-key-btn').disabled=true;document.getElementById('save-key-btn').style.opacity='.45';}
-  document.getElementById('test-btn').style.display='none';
-  document.getElementById('api-modal').classList.add('open');
-  setTimeout(()=>document.getElementById('apikey').focus(),100);
-}
-function closeApiModal(){document.getElementById('api-modal').classList.remove('open');}
-function toggleShow(){const inp=document.getElementById('apikey');inp.type=inp.type==='password'?'text':'password';}
-function onKeyInput(){
-  const v=document.getElementById('apikey').value.trim();
-  const saveBtn=document.getElementById('save-key-btn');const testBtn=document.getElementById('test-btn');
-  document.getElementById('api-msg').textContent='';
-  if(v){const ok=v.startsWith('sk-ant-');saveBtn.disabled=!ok;saveBtn.style.opacity=ok?'1':'.45';testBtn.style.display=ok?'':'none';}
-  else{const has=!!getKey();saveBtn.disabled=!has;saveBtn.style.opacity=has?'1':'.45';testBtn.style.display='none';}
-}
-async function testKey(){
-  const v=document.getElementById('apikey').value.trim();if(!v)return;
-  const btn=document.getElementById('test-btn');btn.textContent='Testing...';btn.disabled=true;
-  document.getElementById('api-msg').style.color='#666';document.getElementById('api-msg').textContent='Sending test request...';
-  try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':v,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:10,messages:[{role:'user',content:'Hi'}]})});
-    const d=await r.json();
-    if(r.ok){document.getElementById('api-msg').style.color='#0d7a5f';document.getElementById('api-msg').textContent='Key works - ready to save';}
-    else{document.getElementById('api-msg').style.color='#c00';document.getElementById('api-msg').textContent='Error: '+(d?.error?.message||'Invalid key');}
-  }catch(e){document.getElementById('api-msg').style.color='#c00';document.getElementById('api-msg').textContent='Network error: '+e.message;}
-  btn.textContent='Test key';btn.disabled=false;
-}
-function saveApiKey(){
-  const v=document.getElementById('apikey').value.trim();const existing=getKey();const toSave=v||existing;
-  if(!toSave)return;localStorage.setItem('cf_api_key',toSave);updatePill();closeApiModal();toast(v?'API key saved':'Key unchanged');
-}
-function clearKey(){if(!confirm('Remove API key?'))return;localStorage.removeItem('cf_api_key');updatePill();closeApiModal();toast('API key removed');}
-
-// ── Toast ─────────────────────────────────────────────────────────────
-function toast(msg,dur=2500){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
-
-// ── Init ──────────────────────────────────────────────────────────────
-(async()=>{
-  updatePill();
-  // Ensure Skoll World Forum always exists as a saved board
-  const _boards=JSON.parse(localStorage.getItem('cf_boards')||'[]');
-  if(!_boards.includes('Skoll World Forum')){_boards.unshift('Skoll World Forum');localStorage.setItem('cf_boards',JSON.stringify(_boards));}
-  if(!localStorage.getItem('cf_board')){localStorage.setItem('cf_board','Skoll World Forum');}
-  currentBoard=localStorage.getItem('cf_board')||'Skoll World Forum';
-  currentSource=localStorage.getItem('cf_source')||'Skoll World Forum';
-  // Set up drag drop
-  setupDragDrop();
-  // Always load fresh from Supabase first
-  await load();
-  render();
-  if(!getKey())setTimeout(openApiModal,800);
-})();
+/* ===== INIT ===== */
+buildSidebar();
+loadVocab();
 </script>
 </body>
 </html>
